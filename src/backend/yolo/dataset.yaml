@@ -1,0 +1,12 @@
+path: ./data/annotations
+train: images/train
+val: images/val
+names:
+0: invoice_number
+1: date
+2: vendor
+3: cuit
+4: subtotal
+5: tax
+6: total
+7: items_table
