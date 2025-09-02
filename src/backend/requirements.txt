@@ -1,38 +1,19 @@
-ultralytics>=8.2.0
-python-doctr[torch]>=0.9.0
-torch>=2.1.0
-torchvision>=0.16.0
-opencv-python>=4.9.0
-pillow>=10.0.0
-numpy>=1.26.0
-rapidfuzz>=3.0.0
-python-dateutil>=2.9.0
-pydantic>=2.7.0
-pydantic-settings>=2.2.1
-PyYAML>=6.0.1
-pdf2image>=1.17.0
-fastapi>=0.110.0
-uvicorn[standard]>=0.29.0
-editdistance>=0.8.1
-# Opcional: exportación/optimizaciones
-onnx>=1.15.0
-onnxruntime-gpu>=1.17.0
-
 fastapi
 uvicorn[standard]
 pydantic
 sqlalchemy
-#psycopg2-binary # Para PostgreSQL. Si usas asyncpg, necesitarás un driver diferente.
-python-multipart # Para manejar subidas de archivos en FastAPI
+psycopg2-binary # O asyncpg si prefieres drivers asíncronos para DB
+python-multipart
 pyjwt
-passlib[bcrypt] # Para hashing de contraseñas de usuarios
-python-decouple # Para gestionar variables de entorno de forma segura
-
-# Dependencias de OCR
-pytesseract # Interfaz Python para Tesseract
-# opencv-python # Para preprocesamiento. La versión específica puede variar.
-# paddlepaddle # Si decides usar PaddleOCR
-# paddleocr # Si decides usar PaddleOCR
-# rq # Redis Queue, para la cola de tareas
-# redis # Cliente Redis
-# boto3 # Para AWS S3 o MinIO
+passlib[bcrypt]
+python-decouple
+rq
+redis
+# Dependencias de YoloV8 y OpenCV
+ultralytics
+torch # o torch-cpu para CPU only si no tienes GPU
+torchvision
+opencv-python
+pytesseract
+Pillow # A menudo una dependencia de pytesseract
+numpy # Generalmente ya instalada, pero es bueno asegurarlo

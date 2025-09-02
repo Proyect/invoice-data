@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copia los modelos Yolo
+COPY models/yolo_models/ /app/models/yolo_models/
+
 # Copiar el resto del código fuente al contenedor
 COPY . .
 
