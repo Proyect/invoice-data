@@ -1,27 +1,30 @@
-# Usa una imagen base de Python oficial, preferiblemente con Alpine o Slim para menor tamaño
-FROM python:3.13
+# Imagen base con Python 3.13 (slim para reducir tamaño)
+FROM python:3.13-slim-bookworm
 
-# Establece el directorio de trabajo dentro del contenedor
+# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Instala Tesseract OCR y sus datos de idioma para español
-# `tesseract-ocr` es el motor, `tesseract-ocr-spa` son los datos para español
-RUN apt-get update && apt-get install -y \
+# Instalar dependencias del sistema:
+# - tesseract-ocr y datos de español
+# - libgl1-mesa-glx (para OpenCV)
+# - build-essential y python3-dev (para compilar paquetes sin wheel precompilado)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     tesseract-ocr-spa \
-    libgl1-mesa-glx \ # Requerido por OpenCV en algunos sistemas sin display
+    libgl1-mesa-glx \
+    build-essential \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala las dependencias de Python
+# Copiar requirements.txt e instalar dependencias de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo el código fuente de tu aplicación al contenedor
+# Copiar el resto del código fuente al contenedor
 COPY . .
 
-# Expone el puerto en el que correrá la API
+# Exponer puerto de la API
 EXPOSE 8000
 
-# Comando para iniciar la aplicación usando Uvicorn
-# --host 0.0.0.0 es necesario para que sea accesible desde fuera del contenedor
+# Comando de arranque con Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

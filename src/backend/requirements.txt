@@ -17,3 +17,22 @@ editdistance>=0.8.1
 # Opcional: exportación/optimizaciones
 onnx>=1.15.0
 onnxruntime-gpu>=1.17.0
+
+fastapi
+uvicorn[standard]
+pydantic
+sqlalchemy
+#psycopg2-binary # Para PostgreSQL. Si usas asyncpg, necesitarás un driver diferente.
+python-multipart # Para manejar subidas de archivos en FastAPI
+pyjwt
+passlib[bcrypt] # Para hashing de contraseñas de usuarios
+python-decouple # Para gestionar variables de entorno de forma segura
+
+# Dependencias de OCR
+pytesseract # Interfaz Python para Tesseract
+# opencv-python # Para preprocesamiento. La versión específica puede variar.
+# paddlepaddle # Si decides usar PaddleOCR
+# paddleocr # Si decides usar PaddleOCR
+# rq # Redis Queue, para la cola de tareas
+# redis # Cliente Redis
+# boto3 # Para AWS S3 o MinIO

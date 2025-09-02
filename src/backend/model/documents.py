@@ -24,4 +24,4 @@ class DocumentType(str, Enum): # Usaremos Enum para tipos de documento para vali
     INVOICE_A = "INVOICE_A"
     INVOICE_B = "INVOICE_B"
     INVOICE_D = "INVOICE_C"
-    # ... otros tipos ...
+    

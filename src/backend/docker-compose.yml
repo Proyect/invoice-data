@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    # Si quieres forzar el arranque con uvicorn desde compose:
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  ocr_worker:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    # Aquí asumo que tienes un módulo en workers/ocr_worker.py
+    command: python -m workers.ocr_worker
+
+volumes:
+  postgres_data:
