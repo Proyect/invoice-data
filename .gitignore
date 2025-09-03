@@ -4,3 +4,4 @@
 *.pyc
 *.env
 *.aux
+*.__pycache__

@@ -7,7 +7,7 @@ CREATE TABLE documents (
     uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     processed_at TIMESTAMP WITH TIME ZONE,
     status VARCHAR(50) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'REVIEW_NEEDED')),
-    document_type VARCHAR(100) NOT NULL, -- Ej: 'DNI_FRONT', 'DNI_BACK', 'INVOICE_A', 'INVOICE_B'
+    document_type VARCHAR(100) NOT NULL, -- Ej: 'DNI_FRONT', 'DNI_BACK', 'INVOICE_A', 'INVOICE_B', 'INVOICE_C'
     processing_error TEXT, -- Para registrar errores de OCR
     -- Otros campos como ID de usuario que subió el documento, etc.
 );
