@@ -15,7 +15,7 @@ def create_document_entry(
     original_filename: str,
     storage_path: str, # Esta es la ruta relativa devuelta por local_storage
     mime_type: str,
-    document_type: DocumentType,
+    document_type: DocumentType, # verificar tipo de datos
     user_id: Optional[uuid.UUID] = None # Asumiendo que el User tiene un ID
 ) -> Document:
     """Crea una nueva entrada de documento en la base de datos."""
@@ -24,7 +24,7 @@ def create_document_entry(
         original_filename=original_filename,
         storage_path=storage_path,
         mime_type=mime_type,
-        uploaded_at=datetime.now(),
+        uploaded_at=datetime.now(datetime.timezone.utc),
         status="PENDING",
         document_type=document_type.value, # Guardar el valor del enum
         user_id=user_id
