@@ -2,7 +2,7 @@ fastapi
 uvicorn[standard]
 pydantic
 sqlalchemy
-psycopg2-binary # O asyncpg si prefieres drivers asíncronos para DB
+psycopg2-binary
 python-multipart
 pyjwt
 passlib[bcrypt]
@@ -16,4 +16,4 @@ torchvision
 opencv-python
 pytesseract
 Pillow # A menudo una dependencia de pytesseract
-numpy # Generalmente ya instalada, pero es bueno asegurarlo
+numpy 
