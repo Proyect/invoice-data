@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -23,5 +24,5 @@ class DocumentType(str, Enum): # Usaremos Enum para tipos de documento para vali
     DNI_BACK = "DNI_BACK"
     INVOICE_A = "INVOICE_A"
     INVOICE_B = "INVOICE_B"
-    INVOICE_D = "INVOICE_C"
+    INVOICE_C = "INVOICE_C"
     

@@ -1,6 +1,6 @@
 # ... (imports) ...
 from services.preprocessing_service import preprocess_image_for_ocr
-from services.ocr_service import perform_yolo_ocr # AHORA usa esta
+from services.ocr_service import perform_yolo_ocr 
 from services.document_service import update_document_status, get_document_by_id_and_data_for_ocr # Ajustar esta función
 from services.storage.local_storage import download_file # O S3
 from database import SessionLocal

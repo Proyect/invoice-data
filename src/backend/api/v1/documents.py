@@ -11,7 +11,8 @@ from services.auth_service import get_current_active_user
 from services.document_service import create_document_entry, get_document_by_id
 from services.storage.local_storage import upload_file_local # Importa tu servicio de almacenamiento
 from services.task_queue_service import add_ocr_task
-from database import get_db, Session # Asegúrate de importar Session para el tipo hint
+from database import get_db 
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

@@ -45,12 +45,12 @@ class Document(Base):
         return f"<Document(id={self.id}, status='{self.status}')>"
 
 # Modelos para ExtractedDniData y ExtractedInvoiceData, si los tienes definidos
-# class ExtractedDniData(Base):
-#     __tablename__ = "extracted_dni_data"
-#     # ... tus columnas ...
+class ExtractedDniData(Base):
+     __tablename__ = "extracted_dni_data"
+     # ... tus columnas ...
 
-# class ExtractedInvoiceData(Base):
-#     __tablename__ = "extracted_invoice_data"
+class ExtractedInvoiceData(Base):
+     __tablename__ = "extracted_invoice_data"
 #     # ... tus columnas ...
 
 # Modelos de usuario para autenticación (si no está en otro archivo como auth_models.py)

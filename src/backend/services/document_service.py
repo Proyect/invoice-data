@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Optional
 
 # Importa tu modelo de base de datos (SQLAlchemy)
-from database import Document, ExtractedDniData, ExtractedInvoiceData # Asumiendo estos modelos están en database.py
+from database import Document, ExtractedDniData, ExtractedInvoiceData # En proceso en database.py
 from models.documents import DocumentType # Para el enum
 
 def create_document_entry(
