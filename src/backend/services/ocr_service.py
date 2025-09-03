@@ -5,7 +5,7 @@ import re
 from PIL import Image
 
 # Importa el cargador de modelos Yolo
-from services.model_loader import load_yolo_model
+from services.model_loader import load_yolo_model, YOLO_MODELS_PATH
 from models.documents import DocumentType # Para usar los ENUMS de tipos de documento
 
 def perform_ocr_with_tesseract(cropped_image_np_array: np.ndarray, lang: str = 'spa', psm: int = 7) -> str:
@@ -37,7 +37,7 @@ def perform_yolo_ocr(np_image_preprocessed: np.ndarray, document_type: DocumentT
     # Seleccionar el modelo YOLO adecuado
     if document_type in [DocumentType.DNI_FRONT, DocumentType.DNI_BACK]:
         yolo_model_name = "dni_yolov8.pt" # Aquí tu modelo entrenado para DNI
-    elif document_type in [DocumentType.INVOICE_A, DocumentType.INVOICE_B]:
+    elif document_type in [DocumentType.INVOICE_A, DocumentType.INVOICE_B, DocumentType.INVOICE_C]:
         yolo_model_name = "invoice_yolov8.pt" # Aquí tu modelo entrenado para facturas
     else:
         # Para el desarrollo inicial, usa un modelo genérico

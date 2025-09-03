@@ -1,52 +1,107 @@
-# ... (imports) ...
+# ocr_api/workers/ocr_worker.py
+
+import logging
+import uuid
+import numpy as np
+import cv2
+from datetime import datetime
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 from services.preprocessing_service import preprocess_image_for_ocr
-from services.ocr_service import perform_yolo_ocr 
-from services.document_service import update_document_status, get_document_by_id_and_data_for_ocr # Ajustar esta función
-from services.storage.local_storage import download_file # O S3
+from services.ocr_service import perform_yolo_ocr
+from services.document_service import update_document_status, get_document_by_id_and_data_for_ocr
+from services.storage.local_storage import download_file_local
 from database import SessionLocal
-# ...
 
 def process_document_for_ocr(document_id: str):
+    """
+    Procesa un documento para extraer texto usando YOLO + OCR.
+    
+    Args:
+        document_id: ID del documento a procesar (como string)
+    """
     db = None
     try:
+        # Convertir string a UUID
+        doc_uuid = uuid.UUID(document_id)
+        
         db = SessionLocal()
-        logging.info(f"Iniciando procesamiento OCR (Yolo) para el documento: {document_id}")
-        update_document_status(db, document_id, 'PROCESSING')
+        logger.info(f"Iniciando procesamiento OCR (YOLO) para el documento: {document_id}")
+        
+        # Actualizar estado a PROCESSING
+        update_document_status(db, doc_uuid, 'PROCESSING')
 
         # Obtener la entrada del documento desde la DB
-        db_document_entry = get_document_by_id_and_data_for_ocr(db, document_id)
+        db_document_entry = get_document_by_id_and_data_for_ocr(db, doc_uuid)
         if not db_document_entry:
             raise ValueError(f"Documento {document_id} no encontrado en la DB.")
 
         # 1. Descargar la imagen
-        image_bytes = download_file(db_document_entry.storage_path) # Asumiendo un servicio de descarga
+        logger.info(f"Descargando archivo: {db_document_entry.storage_path}")
+        image_bytes = download_file_local(db_document_entry.storage_path)
         nparr = np.frombuffer(image_bytes, np.uint8)
         original_image_cv = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        if original_image_cv is None:
+            raise ValueError("No se pudo decodificar la imagen")
 
         # 2. Preprocesar la imagen
+        logger.info("Preprocesando imagen para OCR")
         preprocessed_image = preprocess_image_for_ocr(original_image_cv)
 
         # 3. Realizar YOLO + Tesseract OCR
+        logger.info(f"Ejecutando YOLO + OCR para tipo: {db_document_entry.document_type}")
         extracted_data = perform_yolo_ocr(preprocessed_image, db_document_entry.document_type)
         
         # 4. Guardar resultados y actualizar estado
-        # Esto es una simplificación; la lógica para guardar en `extracted_dni_data`
-        # o `extracted_invoice_data` debe ir aquí, extrayendo los campos del diccionario `extracted_data`.
-        # Por ahora, puedes guardar el `extracted_data` JSONB en el campo `raw_ocr_output` del documento.
+        logger.info("Guardando resultados del OCR")
         update_document_status(
             db,
-            document_id,
+            doc_uuid,
             'COMPLETED',
-            raw_ocr_output=extracted_data # Guarda el diccionario como JSONB
-            # Aquí llamarías a una función como save_dni_data(db, document_id, extracted_data)
-            # o save_invoice_data(db, document_id, extracted_data)
+            processed_at=datetime.now(),
+            raw_ocr_output=extracted_data
         )
-        logging.info(f"Documento {document_id} procesado con éxito.")
+        
+        logger.info(f"Documento {document_id} procesado con éxito.")
+        return {
+            "status": "success",
+            "document_id": document_id,
+            "extracted_data": extracted_data
+        }
 
     except Exception as e:
-        logging.error(f"Error procesando documento {document_id}: {e}", exc_info=True)
+        logger.error(f"Error procesando documento {document_id}: {e}", exc_info=True)
         if db:
-            update_document_status(db, document_id, 'FAILED', error_message=str(e))
+            update_document_status(
+                db, 
+                doc_uuid if 'doc_uuid' in locals() else uuid.UUID(document_id), 
+                'FAILED', 
+                error_message=str(e)
+            )
+        return {
+            "status": "error",
+            "document_id": document_id,
+            "error": str(e)
+        }
     finally:
         if db:
             db.close()
+
+# Función para ejecutar el worker como script independiente
+if __name__ == "__main__":
+    import sys
+    
+    if len(sys.argv) != 2:
+        print("Uso: python -m workers.ocr_worker <document_id>")
+        sys.exit(1)
+    
+    document_id = sys.argv[1]
+    result = process_document_for_ocr(document_id)
+    print(f"Resultado: {result}")

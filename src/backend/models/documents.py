@@ -9,6 +9,8 @@ class DocumentUploadResponse(BaseModel):
     filename: str
     status: str
     message: str
+    
+    model_config = {"from_attributes": True}
 
 class DocumentStatusResponse(BaseModel):
     id: uuid.UUID
@@ -18,6 +20,8 @@ class DocumentStatusResponse(BaseModel):
     uploaded_at: datetime
     processed_at: Optional[datetime]
     processing_error: Optional[str]
+    
+    model_config = {"from_attributes": True}
 
 class DocumentType(str, Enum): # Usaremos Enum para tipos de documento para validar
     DNI_FRONT = "DNI_FRONT"

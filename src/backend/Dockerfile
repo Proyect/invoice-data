@@ -1,5 +1,5 @@
-# Imagen base con Python 3.13 (slim para reducir tamaño)
-FROM python:3.13-slim-bookworm
+# Imagen base con Python 3.11 (slim para reducir tamaño)
+FROM python:3.11-slim-bookworm
 
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
@@ -21,7 +21,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia los modelos Yolo
-#COPY models/yolo_models/ /app/models/yolo_models/
+COPY models/yolo_models/ /app/models/yolo_models/
 
 # Copiar el resto del código fuente al contenedor
 COPY . .

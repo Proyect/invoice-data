@@ -1,6 +1,6 @@
 # ocr_api/database.py (fragmento, asumiendo lo demás ya está)
 
-from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, UUID, Numeric, Date, Enum as SQLEnum
+from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, UUID, Numeric, Date, Enum as SQLEnum, func
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.dialects.postgresql import JSONB # Importar para JSONB
 import uuid
@@ -31,7 +31,7 @@ class Document(Base):
     original_filename = Column(String(255), nullable=False)
     storage_path = Column(String(512), nullable=False) # Ruta relativa al archivo
     mime_type = Column(String(100), nullable=False)
-    uploaded_at = Column(DateTime(timezone=True), default=datetime.now)
+    uploaded_at = Column(DateTime(timezone=True), server_default=func.now())
     processed_at = Column(DateTime(timezone=True))
     status = Column(String(50), nullable=False, default='PENDING')
     document_type = Column(SQLEnum(DocumentType, name='document_type_enum'), nullable=False)
@@ -44,14 +44,44 @@ class Document(Base):
     def __repr__(self):
         return f"<Document(id={self.id}, status='{self.status}')>"
 
-# Modelos para ExtractedDniData y ExtractedInvoiceData, si los tienes definidos
+# Modelos para ExtractedDniData y ExtractedInvoiceData - implementación básica
 class ExtractedDniData(Base):
-     __tablename__ = "extracted_dni_data"
-     # ... tus columnas ...
+    __tablename__ = "extracted_dni_data"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    document_id = Column(UUID(as_uuid=True), nullable=False)
+    apellido = Column(String(100))
+    nombre = Column(String(100))
+    numero_dni = Column(String(20))
+    fecha_nacimiento = Column(Date)
+    fecha_emision = Column(Date)
+    fecha_vencimiento = Column(Date)
+    domicilio = Column(String(200))
+    lugar_nacimiento = Column(String(100))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    def __repr__(self):
+        return f"<ExtractedDniData(document_id={self.document_id})>"
 
 class ExtractedInvoiceData(Base):
-     __tablename__ = "extracted_invoice_data"
-#     # ... tus columnas ...
+    __tablename__ = "extracted_invoice_data"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    document_id = Column(UUID(as_uuid=True), nullable=False)
+    numero_factura = Column(String(50))
+    fecha_emision = Column(Date)
+    fecha_vencimiento = Column(Date)
+    cuit_emisor = Column(String(20))
+    razon_social_emisor = Column(String(200))
+    cuit_receptor = Column(String(20))
+    razon_social_receptor = Column(String(200))
+    subtotal = Column(Numeric(10, 2))
+    iva = Column(Numeric(10, 2))
+    total = Column(Numeric(10, 2))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    def __repr__(self):
+        return f"<ExtractedInvoiceData(document_id={self.document_id})>"
 
 # Modelos de usuario para autenticación (si no está en otro archivo como auth_models.py)
 class User(Base):

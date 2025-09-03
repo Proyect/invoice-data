@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Optional
 
 # Importa tu modelo de base de datos (SQLAlchemy)
-from database import Document, ExtractedDniData, ExtractedInvoiceData # En proceso en database.py
+from database import Document # Solo Document por ahora
 from models.documents import DocumentType # Para el enum
 
 def create_document_entry(
@@ -26,7 +26,7 @@ def create_document_entry(
         mime_type=mime_type,
         uploaded_at=datetime.now(datetime.timezone.utc),
         status="PENDING",
-        document_type=document_type.value, # Guardar el valor del enum
+        document_type=document_type, # Guardar el enum directamente, no .value
         user_id=user_id
     )
     db.add(db_document)
@@ -59,7 +59,7 @@ def update_document_status(
     db_document = db.query(Document).filter(Document.id == document_id).first()
     if db_document:
         db_document.status = status
-        db_document.processed_at = processed_at if processed_at else datetime.now()
+        db_document.processed_at = processed_at if processed_at else datetime.now(datetime.timezone.utc)
         db_document.processing_error = error_message
         if raw_ocr_output is not None:
             db_document.raw_ocr_output = raw_ocr_output # Asumiendo que tu modelo SQLAlchemy Document tiene un campo JSONB `raw_ocr_output`
