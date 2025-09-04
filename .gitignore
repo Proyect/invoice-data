@@ -1,4 +1,8 @@
 /.venv
+/tests/__pycache__/
+/tests/datasets/
+/tests/runs/
+/tests/weights/
 
 .env
 *.pyc
