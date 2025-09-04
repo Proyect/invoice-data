@@ -14,6 +14,9 @@ REDIS_HOST = config("REDIS_HOST", default="localhost")
 REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
 REDIS_DB = config("REDIS_DB", default=0, cast=int)
 
+#YOLO models path
+YOLO_MODELS_PATH = config("YOLO_MODELS_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), '../models/yolo_models'))    
+
 # Storage Settings
 # si es necesario implementar
 LOCAL_STORAGE_PATH = config("LOCAL_STORAGE_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploaded_documents_local"))

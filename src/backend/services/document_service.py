@@ -59,7 +59,7 @@ def update_document_status(
     db_document = db.query(Document).filter(Document.id == document_id).first()
     if db_document:
         db_document.status = status
-        db_document.processed_at = processed_at if processed_at else datetime.now(datetime.timezone.utc)
+        db_document.processed_at = processed_at if processed_at else datetime.now(timezone.utc)
         db_document.processing_error = error_message
         if raw_ocr_output is not None:
             db_document.raw_ocr_output = raw_ocr_output # Asumiendo que tu modelo SQLAlchemy Document tiene un campo JSONB `raw_ocr_output`

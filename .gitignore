@@ -7,5 +7,10 @@
 .env
 *.pyc
 *.env
+*.env.backup
 *.aux
 *.__pycache__
+__pycache__/
+*.pt
+*.db
+*.sqlite3
