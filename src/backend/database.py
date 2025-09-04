@@ -2,13 +2,14 @@
 
 from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, UUID, Numeric, Date, Enum as SQLEnum, func
 from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.dialects.postgresql import JSONB # Importar para JSONB
+from sqlalchemy.types import JSON
+
 import uuid
 from datetime import datetime
 from typing import Optional
-from models.documents import DocumentType # Importar el Enum para la columna
+from src.backend.models.documents import DocumentType # Importar el Enum para la columna
 
-from config import DATABASE_URL
+from src.backend.config import DATABASE_URL
 
 # Configuración de la base de datos
 engine = create_engine(DATABASE_URL)
@@ -36,7 +37,7 @@ class Document(Base):
     status = Column(String(50), nullable=False, default='PENDING')
     document_type = Column(SQLEnum(DocumentType, name='document_type_enum'), nullable=False)
     processing_error = Column(Text)
-    raw_ocr_output = Column(JSONB) # Campo para almacenar la salida JSON de YOLO+OCR
+    raw_ocr_output = Column(JSON) # Campo para almacenar la salida JSON de YOLO+OCR
     user_id = Column(UUID(as_uuid=True), nullable=True) # ID del usuario que subió el documento
 
     # Relaciones con datos extraídos, etc. (se pueden añadir más tarde)

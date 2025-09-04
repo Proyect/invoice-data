@@ -2,12 +2,12 @@
 
 import uuid
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 # Importa tu modelo de base de datos (SQLAlchemy)
-from database import Document # Solo Document por ahora
-from models.documents import DocumentType # Para el enum
+from ..database import Document
+from src.backend.models.documents import DocumentType # Para el enum
 
 def create_document_entry(
     db: Session,
@@ -24,7 +24,7 @@ def create_document_entry(
         original_filename=original_filename,
         storage_path=storage_path,
         mime_type=mime_type,
-        uploaded_at=datetime.now(datetime.timezone.utc),
+        uploaded_at=datetime.now(timezone.utc),
         status="PENDING",
         document_type=document_type, # Guardar el enum directamente, no .value
         user_id=user_id
