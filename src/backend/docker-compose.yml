@@ -50,8 +50,8 @@ services:
       - redis
     volumes:
       - shared_storage:/app/uploaded_documents_local
-    # Aquí asumo que tienes un módulo en workers/ocr_worker.py
-    command: python -m workers.ocr_worker
+    # Worker de RQ para procesar la cola de tareas OCR
+    command: rq worker ocr_tasks
 
 volumes:
   postgres_data:

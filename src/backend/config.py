@@ -17,6 +17,10 @@ REDIS_DB = config("REDIS_DB", default=0, cast=int)
 #YOLO models path
 YOLO_MODELS_PATH = config("YOLO_MODELS_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), '../models/yolo_models'))    
 
+# Project Root
+PROJECT_ROOT= config("PROJECT_ROOT", default=os.path.join(os.path.dirname(os.path.abspath(__file__))))
+
+
 # Storage Settings
 # si es necesario implementar
 LOCAL_STORAGE_PATH = config("LOCAL_STORAGE_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploaded_documents_local"))

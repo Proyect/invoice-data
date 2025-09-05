@@ -1,13 +1,18 @@
 # test_document_service.py
+from dotenv import load_dotenv
+import os
 import sys
-sys.path.append(r'c:\Users\amdiaz\Desktop\code\Python\v.13.13\invoice-data')
+load_dotenv()
+project_root = os.getenv("PROJECT_ROOT")
+if project_root and project_root not in sys.path:
+    sys.path.append(project_root)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import uuid
-from src.backend.database import create_db_and_tables
-from src.backend.services.document_service import *
-from src.backend.models.documents import DocumentType
+from database import create_db_and_tables
+from services.document_service import *
+from models.documents import DocumentType
 
 # Crear las tablas si no existen
 create_db_and_tables()

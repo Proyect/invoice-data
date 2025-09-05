@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copiar requirements.txt e instalar dependencias de Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --timeout 1000 -r requirements.txt
 
 # Copia los modelos Yolo
 COPY models/yolo_models/ /app/models/yolo_models/

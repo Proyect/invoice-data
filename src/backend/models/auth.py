@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+import uuid
 
 class Token(BaseModel):
     access_token: str
@@ -12,6 +13,7 @@ class TokenData(BaseModel):
     model_config = {"from_attributes": True}
 
 class User(BaseModel):
+    id: uuid.UUID
     username: str
     email: str | None = None
     full_name: str | None = None
