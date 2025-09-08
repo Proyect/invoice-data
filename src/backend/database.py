@@ -1,15 +1,15 @@
 # ocr_api/database.py (fragmento, asumiendo lo demás ya está)
 
-from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, UUID, Numeric, Date, Enum as SQLEnum, func
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, UUID, Numeric, Date, Enum as SQLEnum, func, ForeignKey
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy.types import JSON
 
 import uuid
 from datetime import datetime
 from typing import Optional
-from src.backend.models.documents import DocumentType # Importar el Enum para la columna
+from models.enums import DocumentType # Importar el Enum desde enums.py
 
-from src.backend.config import DATABASE_URL
+from config import DATABASE_URL
 
 # Configuración de la base de datos
 engine = create_engine(DATABASE_URL)
@@ -38,7 +38,10 @@ class Document(Base):
     document_type = Column(SQLEnum(DocumentType, name='document_type_enum'), nullable=False)
     processing_error = Column(Text)
     raw_ocr_output = Column(JSON) # Campo para almacenar la salida JSON de YOLO+OCR
-    user_id = Column(UUID(as_uuid=True), nullable=True) # ID del usuario que subió el documento
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=True) # ID del usuario que subió el documento
+    
+    # Relación con User
+    user = relationship("User", back_populates="documents")
 
     # Relaciones con datos extraídos, etc. (se pueden añadir más tarde)
 
@@ -93,6 +96,9 @@ class User(Base):
     full_name = Column(String(100), nullable=True)
     hashed_password = Column(String(255), nullable=False)
     disabled = Column(Boolean, default=False)
+    
+    # Relación con Documents
+    documents = relationship("Document", back_populates="user")
 
     def __repr__(self):
         return f"<User(username='{self.username}')>"

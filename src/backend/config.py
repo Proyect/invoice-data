@@ -15,7 +15,7 @@ REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
 REDIS_DB = config("REDIS_DB", default=0, cast=int)
 
 #YOLO models path
-YOLO_MODELS_PATH = config("YOLO_MODELS_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), '../models/yolo_models'))    
+YOLO_MODELS_PATH = config("YOLO_MODELS_PATH", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models/yolo_models'))    
 
 # Project Root
 PROJECT_ROOT= config("PROJECT_ROOT", default=os.path.join(os.path.dirname(os.path.abspath(__file__))))

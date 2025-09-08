@@ -1,9 +1,10 @@
 from ultralytics import YOLO
 import os
-from src.backend.config import YOLO_MODELS_PATH
+from config import YOLO_MODELS_PATH
 
 # Ruta base donde se almacenan los modelos YOLO
-YOLO_MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), YOLO_MODELS_PATH)
+# Usar ruta absoluta desde config.py
+YOLO_MODELS = YOLO_MODELS_PATH
 
 # Cache para modelos cargados
 _yolo_model_cache = {}
@@ -16,7 +17,7 @@ def load_yolo_model(model_name: str) -> YOLO:
     if model_name not in _yolo_model_cache:
         model_path = os.path.join(YOLO_MODELS, model_name)
         if not os.path.exists(model_path):
-            raise FileNotFoundError(f"Modelo YOLO '{model_name}' no encontrado en {YOLO_MODELS_PATH}")
+            raise FileNotFoundError(f"Modelo YOLO '{model_name}' no encontrado en {YOLO_MODELS}")
         _yolo_model_cache[model_name] = YOLO(model_path)
     return _yolo_model_cache[model_name]
 

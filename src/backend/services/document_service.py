@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 from typing import Optional
 
 # Importa tu modelo de base de datos (SQLAlchemy)
-from ..database import Document
-from src.backend.models.documents import DocumentType # Para el enum
+from database import Document
+from models.documents import DocumentType # Para el enum
 
 def create_document_entry(
     db: Session,
