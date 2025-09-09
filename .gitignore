@@ -1,4 +1,6 @@
 /.venv
+venv yolo_training_env
+
 /tests/__pycache__/
 /tests/datasets/
 /tests/runs/
@@ -14,3 +16,13 @@ __pycache__/
 *.pt
 *.db
 *.sqlite3
+
+# Modelos YOLO / pesos de ML
+*.pt
+*.pth
+*.onnx
+*.pb
+*.h5
+*.ckpt
+models/yolo_models/*
+!models/yolo_models/.gitkeep   # dejamos un placeholder

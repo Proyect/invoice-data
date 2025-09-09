@@ -6,53 +6,91 @@ services:
     container_name: invoice_db
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-invoice_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-invoice_db}"]
+      interval: 10s
       timeout: 5s
       retries: 5
       
   redis:
     image: redis:7-alpine
+    container_name: invoice_redis
     restart: always
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     build: .
+    container_name: invoice_api
     restart: always
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@db:5432/${POSTGRES_DB:-invoice_db}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - shared_storage:/app/uploaded_documents_local
-    # Si quieres forzar el arranque con uvicorn desde compose:
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+      - model_storage:/app/models/yolo_models
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-  ocr_worker:
+  celery_worker:
     build: .
+    container_name: invoice_celery_worker
     restart: always
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@db:5432/${POSTGRES_DB:-invoice_db}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_URL=redis://redis:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - shared_storage:/app/uploaded_documents_local
-    # Worker de RQ para procesar la cola de tareas OCR
-    command: rq worker ocr_tasks
+      - model_storage:/app/models/yolo_models
+    command: celery -A ocr_worker.celery_app worker --loglevel=info --concurrency=2
+
+  celery_flower:
+    build: .
+    container_name: invoice_celery_flower
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    command: celery -A ocr_worker.celery_app flower --port=5555
 
 volumes:
   postgres_data:
   shared_storage:
+  model_storage:

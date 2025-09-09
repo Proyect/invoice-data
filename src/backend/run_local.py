@@ -20,11 +20,11 @@ os.environ['YOLO_MODELS_PATH'] = './models/yolo_models'
 sys.path.append('.')
 
 if __name__ == "__main__":
-    print("🚀 Iniciando API en modo desarrollo local...")
-    print("📊 Base de datos: SQLite (test.db)")
-    print("🌐 URL: http://localhost:8000")
-    print("📚 Documentación: http://localhost:8000/docs")
-    print("🛑 Presiona Ctrl+C para detener")
+    print("Iniciando API en modo desarrollo local...")
+    print("Base de datos: SQLite (test.db)")
+    print("URL: http://localhost:8000")
+    print("Documentacion: http://localhost:8000/docs")
+    print("Presiona Ctrl+C para detener")
     print("-" * 50)
     
     uvicorn.run(

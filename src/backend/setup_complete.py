@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Script de configuración completa para el backend FastAPI OCR
 Automatiza la instalación y configuración inicial del proyecto
@@ -9,6 +10,12 @@ import sys
 import subprocess
 import shutil
 from pathlib import Path
+
+# Configurar encoding para Windows
+if os.name == 'nt':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.detach())
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.detach())
 
 def print_step(step_num, description):
     """Imprime un paso del proceso de setup"""
@@ -22,11 +29,11 @@ def run_command(command, description="", check=True):
     try:
         result = subprocess.run(command, shell=True, check=check, capture_output=True, text=True)
         if result.stdout:
-            print(f"✅ {description}")
+            print(f"[OK] {description}")
             print(result.stdout)
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error en: {description}")
+        print(f"[ERROR] Error en: {description}")
         print(f"Error: {e.stderr}")
         return False
 
@@ -34,29 +41,29 @@ def create_directory(path, description=""):
     """Crea un directorio si no existe"""
     try:
         os.makedirs(path, exist_ok=True)
-        print(f"✅ Directorio creado: {path} - {description}")
+        print(f"[OK] Directorio creado: {path} - {description}")
         return True
     except Exception as e:
-        print(f"❌ Error creando directorio {path}: {e}")
+        print(f"[ERROR] Error creando directorio {path}: {e}")
         return False
 
 def copy_file(source, destination, description=""):
     """Copia un archivo"""
     try:
         shutil.copy2(source, destination)
-        print(f"✅ Archivo copiado: {source} -> {destination} - {description}")
+        print(f"[OK] Archivo copiado: {source} -> {destination} - {description}")
         return True
     except Exception as e:
-        print(f"❌ Error copiando archivo: {e}")
+        print(f"[ERROR] Error copiando archivo: {e}")
         return False
 
 def check_python_version():
     """Verifica la versión de Python"""
     version = sys.version_info
     if version.major < 3 or (version.major == 3 and version.minor < 8):
-        print(f"❌ Python 3.8+ requerido. Versión actual: {version.major}.{version.minor}")
+        print(f"[ERROR] Python 3.8+ requerido. Version actual: {version.major}.{version.minor}")
         return False
-    print(f"✅ Python {version.major}.{version.minor}.{version.micro} detectado")
+    print(f"[OK] Python {version.major}.{version.minor}.{version.micro} detectado")
     return True
 
 def setup_virtual_environment():
@@ -71,7 +78,7 @@ def setup_virtual_environment():
         if not run_command('python -m venv .venv', "Creando entorno virtual"):
             return False
     else:
-        print("✅ Entorno virtual ya existe")
+        print("[OK] Entorno virtual ya existe")
     
     # Activar entorno virtual y actualizar pip
     activate_cmd = '.venv\\Scripts\\activate' if os.name == 'nt' else 'source .venv/bin/activate'
@@ -90,7 +97,7 @@ def install_dependencies():
     if os.path.exists('requirements.txt'):
         return run_command(f'{pip_cmd} install -r requirements.txt', "Instalando dependencias de requirements.txt")
     else:
-        print("❌ requirements.txt no encontrado")
+        print("[ERROR] requirements.txt no encontrado")
         return False
 
 def setup_directories():
@@ -118,10 +125,10 @@ def setup_environment_file():
     if os.path.exists('.env.local') and not os.path.exists('.env'):
         return copy_file('.env.local', '.env', "Archivo de configuración de desarrollo")
     elif os.path.exists('.env'):
-        print("✅ Archivo .env ya existe")
+        print("[OK] Archivo .env ya existe")
         return True
     else:
-        print("❌ No se encontró .env.local para copiar")
+        print("[ERROR] No se encontro .env.local para copiar")
         return False
 
 def check_external_dependencies():
@@ -157,9 +164,9 @@ sys.path.append('.')
 from database import create_db_and_tables
 try:
     create_db_and_tables()
-    print("✅ Tablas de base de datos creadas exitosamente")
+    print("[OK] Tablas de base de datos creadas exitosamente")
 except Exception as e:
-    print(f"❌ Error creando tablas: {e}")
+    print(f"[ERROR] Error creando tablas: {e}")
 '''
     
     with open('temp_db_setup.py', 'w') as f:
@@ -195,16 +202,16 @@ python run_local.py
     try:
         with open('start_server.bat', 'w') as f:
             f.write(windows_script)
-        print("✅ Script de inicio para Windows creado: start_server.bat")
+        print("[OK] Script de inicio para Windows creado: start_server.bat")
         
         with open('start_server.sh', 'w') as f:
             f.write(unix_script)
         os.chmod('start_server.sh', 0o755)
-        print("✅ Script de inicio para Unix creado: start_server.sh")
+        print("[OK] Script de inicio para Unix creado: start_server.sh")
         
         return True
     except Exception as e:
-        print(f"❌ Error creando scripts de inicio: {e}")
+        print(f"[ERROR] Error creando scripts de inicio: {e}")
         return False
 
 def print_final_instructions(external_deps):
@@ -216,23 +223,23 @@ def print_final_instructions(external_deps):
     
     print("\n1. DEPENDENCIAS EXTERNAS:")
     if not external_deps.get('tesseract', False):
-        print("   ❌ Instalar Tesseract OCR:")
+        print("   [PENDIENTE] Instalar Tesseract OCR:")
         print("      - Windows: https://github.com/UB-Mannheim/tesseract/wiki")
         print("      - Ubuntu: sudo apt-get install tesseract-ocr tesseract-ocr-spa")
         print("      - macOS: brew install tesseract tesseract-lang")
     else:
-        print("   ✅ Tesseract OCR instalado")
+        print("   [OK] Tesseract OCR instalado")
     
     if not external_deps.get('redis', False):
-        print("   ⚠️  Redis (opcional para desarrollo):")
+        print("   [OPCIONAL] Redis (opcional para desarrollo):")
         print("      - Windows: https://redis.io/docs/getting-started/installation/install-redis-on-windows/")
         print("      - Ubuntu: sudo apt-get install redis-server")
         print("      - macOS: brew install redis")
     else:
-        print("   ✅ Redis instalado")
+        print("   [OK] Redis instalado")
     
     print("\n2. MODELOS YOLO:")
-    print("   📁 Colocar modelos entrenados en: models/yolo_models/")
+    print("   [INFO] Colocar modelos entrenados en: models/yolo_models/")
     print("      - dni_yolov8.pt (para DNI)")
     print("      - invoice_yolov8.pt (para facturas)")
     
@@ -278,7 +285,7 @@ def main():
     # Ejecutar pasos de configuración
     for step in steps:
         if not step():
-            print(f"\n❌ Error en el paso: {step.__name__}")
+            print(f"\n[ERROR] Error en el paso: {step.__name__}")
             print("Configuración interrumpida. Revisa los errores anteriores.")
             return False
     
@@ -295,8 +302,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n\n⚠️  Configuración cancelada por el usuario")
+        print("\n\n[INFO] Configuracion cancelada por el usuario")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n[ERROR] Error inesperado: {e}")
         sys.exit(1)
