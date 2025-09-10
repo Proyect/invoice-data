@@ -38,7 +38,7 @@ def perform_yolo_ocr(np_image_preprocessed: np.ndarray, document_type: DocumentT
     if document_type in [DocumentType.DNI_FRONT, DocumentType.DNI_BACK]:
         yolo_model_name = "dni_yolov8.pt" # Aquí tu modelo entrenado para DNI
     elif document_type in [DocumentType.INVOICE_A, DocumentType.INVOICE_B, DocumentType.INVOICE_C]:
-        yolo_model_name = "invoice_yolov8.pt" # Aquí tu modelo entrenado para facturas
+        yolo_model_name = "invoices_cpu_abs/weights/best.pt" # Tu modelo entrenado para facturas
     else:
         # Para el desarrollo inicial, usa un modelo genérico
         print(f"Advertencia: Tipo de documento {document_type} no tiene un modelo YOLO específico. Usando yolov8n.pt")

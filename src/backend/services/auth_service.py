@@ -27,12 +27,17 @@ def get_password_hash(password):
 TEST_USER_USERNAME = "testuser"
 TEST_USER_PASSWORD_HASH = get_password_hash("testpassword") # Genera un hash para "testpassword"
 
-def authenticate_user(username: str, password: str):
-    # Aquí iría la lógica para buscar el usuario en la DB
-    # Por ahora, usamos un usuario hardcodeado:
-    if username == TEST_USER_USERNAME and verify_password(password, TEST_USER_PASSWORD_HASH):
-        # Crear un objeto User dummy si no hay DB de usuarios, o cargar de la DB
-        return UserModel(id=uuid.uuid4(), username=TEST_USER_USERNAME, hashed_password=TEST_USER_PASSWORD_HASH, disabled=False)
+def authenticate_user(username: str, password: str, db: Session):
+    # Buscar el usuario en la base de datos
+    from database import User as DBUser
+    user = db.query(DBUser).filter(DBUser.username == username).first()
+    if user and verify_password(password, user.hashed_password):
+        return UserModel(
+            id=user.id,
+            username=user.username,
+            hashed_password=user.hashed_password,
+            disabled=user.disabled
+        )
     return None
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -54,17 +59,31 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: An
     try:
         payload = jwt.decode(token, SECRET_KEY_JWT, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        if username is None:
+        user_id: str = payload.get("user_id")
+        if username is None or user_id is None:
             raise credentials_exception
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
     
-    # Aquí se buscaría el usuario en la DB real
-    # Por ahora, un User dummy para el test
-    if token_data.username == TEST_USER_USERNAME:
-        return UserModel(id=uuid.uuid4(), username=TEST_USER_USERNAME, hashed_password=TEST_USER_PASSWORD_HASH, disabled=False)
-    raise credentials_exception
+    # Buscar el usuario en la base de datos usando el ID del token
+    from database import User as DBUser
+    import uuid
+    try:
+        user_uuid = uuid.UUID(user_id)
+        user = db.query(DBUser).filter(DBUser.id == user_uuid).first()
+    except ValueError:
+        raise credentials_exception
+    
+    if user is None:
+        raise credentials_exception
+    
+    return UserModel(
+        id=user.id,
+        username=user.username,
+        hashed_password=user.hashed_password,
+        disabled=user.disabled
+    )
 
 
 async def get_current_active_user(
