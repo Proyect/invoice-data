@@ -24,5 +24,12 @@ __pycache__/
 *.pb
 *.h5
 *.ckpt
-models/yolo_models/*
-!models/yolo_models/.gitkeep   # dejamos un placeholder
+*.jpg
+*.txt
+*.png
+*.csv
+*.yaml
+*.cache
+/models/yolo_models/*
+
+/models/yolo_models/.gitkeep   # dejamos un placeholder

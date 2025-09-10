@@ -147,18 +147,9 @@ flake8
 black
 ```
 
-## 🤝 Contribuir
 
-1. Fork el proyecto
-2. Crear rama feature (`git checkout -b feature/AmazingFeature`)
-3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir Pull Request
 
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
-## 🆘 Soporte
-
-Para soporte, email: [tu-email@ejemplo.com](mailto:tu-email@ejemplo.com)

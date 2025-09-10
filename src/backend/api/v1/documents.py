@@ -1,6 +1,6 @@
 # ocr_api/api/v1/documents.py
 
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status, Query
 from typing import Annotated
 import uuid
 
@@ -19,7 +19,7 @@ router = APIRouter()
 @router.post("/upload", response_model=DocumentUploadResponse, status_code=status.HTTP_202_ACCEPTED, summary="Subir un documento para OCR")
 async def upload_document(
     file: Annotated[UploadFile, File(description="Archivo de imagen o PDF a procesar.")],
-    document_type: DocumentType, # Hacemos que sea requerido para saber qué modelo YOLO usar
+    document_type: Annotated[DocumentType, Query(description="Tipo de documento a procesar")],
     current_user: Annotated[UserModel, Depends(get_current_active_user)],
     db: Annotated[Session, Depends(get_db)]
 ):
