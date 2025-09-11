@@ -4,15 +4,15 @@ services:
     container_name: invoice_db
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-invoice_db}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres123}
+      POSTGRES_DB: ocr_database
+      POSTGRES_USER: ocr_user
+      POSTGRES_PASSWORD: your_secure_password_here
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-invoice_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ocr_user -d ocr_database"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,7 +36,10 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@db:5432/${POSTGRES_DB:-invoice_db}
+      - DATABASE_URL=postgresql://ocr_user:your_secure_password_here@db:5432/ocr_database
+      - POSTGRES_USER=ocr_user
+      - POSTGRES_PASSWORD=your_secure_password_here
+      - POSTGRES_DB=ocr_database
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
@@ -59,7 +62,10 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@db:5432/${POSTGRES_DB:-invoice_db}
+      - DATABASE_URL=postgresql://ocr_user:your_secure_password_here@db:5432/ocr_database
+      - POSTGRES_USER=ocr_user
+      - POSTGRES_PASSWORD=your_secure_password_here
+      - POSTGRES_DB=ocr_database
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
@@ -72,7 +78,7 @@ services:
     volumes:
       - shared_storage:/app/uploaded_documents_local
       - model_storage:/app/models/yolo_models
-    command: celery -A ocr_worker.celery_app worker --loglevel=info --concurrency=2
+    command: celery -A ocr_worker.celery_app worker --loglevel=info --concurrency=2 --include=ocr_worker.worker
 
   celery_flower:
     build: .

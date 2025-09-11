@@ -41,3 +41,11 @@ README.md
 Dockerfile
 docker-compose.yml
 .dockerignore
+
+# Large directories
+datasets/
+temp/
+logs/
+.venv/
+yolo_training_env/
+uploaded_documents_local/
