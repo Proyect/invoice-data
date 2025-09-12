@@ -30,8 +30,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@celery_app.task(bind=True, name='ocr_tasks.process_document')
-def process_document_celery(self, document_id: str) -> Dict[str, Any]:
+@celery_app.task(bind=True, name='ocr_tasks.process_document_task')
+def process_document_task(self, document_id: str) -> Dict[str, Any]:
     """
     Tarea Celery para procesar un documento con OCR.
     
@@ -80,6 +80,18 @@ def process_document_celery(self, document_id: str) -> Dict[str, Any]:
         if original_image_cv is None:
             raise ValueError("No se pudo decodificar la imagen")
         
+        # Asegurar que la imagen tenga 3 canales (BGR)
+        if len(original_image_cv.shape) == 2:
+            # Si es escala de grises, convertir a BGR
+            original_image_cv = cv2.cvtColor(original_image_cv, cv2.COLOR_GRAY2BGR)
+            logger.info("[Celery] Imagen convertida de escala de grises a BGR")
+        elif len(original_image_cv.shape) == 3 and original_image_cv.shape[2] == 4:
+            # Si tiene canal alpha, convertir a BGR
+            original_image_cv = cv2.cvtColor(original_image_cv, cv2.COLOR_BGRA2BGR)
+            logger.info("[Celery] Imagen convertida de BGRA a BGR")
+        
+        logger.info(f"[Celery] Imagen cargada: {original_image_cv.shape}")
+        
         # Actualizar progreso
         self.update_state(
             state='PROCESSING',
@@ -126,15 +138,23 @@ def process_document_celery(self, document_id: str) -> Dict[str, Any]:
         # 5. Guardar resultados
         logger.info("[Celery] Guardando resultados del OCR")
         
-        # Preparar datos para guardar
+        # Preparar datos para guardar (convertir UUIDs a strings para JSON)
+        structured_data_dict = None
+        if structured_data:
+            structured_data_dict = structured_data.dict()
+            # Convertir UUID a string para serialización JSON
+            if 'document_id' in structured_data_dict:
+                structured_data_dict['document_id'] = str(structured_data_dict['document_id'])
+        
         save_data = {
             'raw_ocr_output': raw_extracted_data,
-            'structured_data': structured_data.dict() if structured_data else None,
+            'structured_data': structured_data_dict,
             'processing_quality': processing_quality,
             'processing_metadata': {
                 'celery_task_id': self.request.id,
                 'processing_time': datetime.now().isoformat(),
-                'image_dimensions': original_image_cv.shape[:2] if original_image_cv is not None else None
+                'image_dimensions': original_image_cv.shape[:2] if original_image_cv is not None else None,
+                'document_id': str(doc_uuid)  # Convertir UUID a string
             }
         }
         
@@ -228,11 +248,12 @@ def determine_processing_quality(raw_data: Dict[str, Any]) -> str:
 @celery_app.task(name='ocr_tasks.health_check')
 def health_check() -> Dict[str, Any]:
     """Tarea de verificación de salud del worker"""
+    import celery
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "worker_info": {
-            "celery_version": celery_app.version,
+            "celery_version": celery.__version__,
             "python_version": sys.version
         }
     }

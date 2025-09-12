@@ -3,16 +3,19 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status, Query
 from typing import Annotated
 import uuid
-
-# Importa los nuevos servicios
-from models.documents import DocumentUploadResponse, DocumentStatusResponse, DocumentType
-from models.auth import User as UserModel # Usar modelo Pydantic
-from services.auth_service import get_current_active_user
-from services.document_service import create_document_entry, get_document_by_id
-from services.storage.local_storage import upload_file_local # Importa tu servicio de almacenamiento
-from services.task_queue_service import add_ocr_task
-from database import get_db 
+import logging
 from sqlalchemy.orm import Session
+
+from models.documents import DocumentUploadResponse, DocumentStatusResponse, DocumentType
+from models.auth import User as UserModel
+from services.auth_service import get_current_active_user
+from services.document_service import create_document_entry, get_document_by_id, delete_document, get_documents_by_user
+from services.storage.local_storage import upload_file_local
+from services.task_queue_service import add_ocr_task
+from services.sync_ocr_service import process_document_sync, is_redis_available
+from database import get_db
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -80,21 +83,141 @@ async def upload_document(
             user_id=current_user.id # Asumiendo que User tiene un campo ID
         )
 
-        # 3. Añadir una tarea a la cola
-        await add_ocr_task(str(document_id)) # RQ prefiere strings para IDs de tareas
-
-        return DocumentUploadResponse(
-            document_id=document_id,
-            filename=file.filename,
-            status="PENDING",
-            message="Document uploaded and queued for processing."
-        )
+        # 3. Procesar documento - usar Redis si está disponible, sino procesamiento síncrono
+        if is_redis_available():
+            # Usar cola de tareas con Redis
+            await add_ocr_task(str(document_id))
+            return DocumentUploadResponse(
+                document_id=document_id,
+                filename=file.filename,
+                status="PENDING",
+                message="Document uploaded and queued for processing."
+            )
+        else:
+            # Procesamiento síncrono para desarrollo local
+            logger.info(f"Redis no disponible, procesando documento {document_id} de forma síncrona")
+            result = process_document_sync(document_id)
+            
+            if result["status"] == "success":
+                return DocumentUploadResponse(
+                    document_id=document_id,
+                    filename=file.filename,
+                    status="COMPLETED",
+                    message="Document uploaded and processed successfully."
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Error processing document: {result.get('error', 'Unknown error')}"
+                )
     
     except Exception as e:
-        # En caso de error, limpiar recursos si es necesario
+        logger.error(f"Error getting document {document_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error processing file upload: {str(e)}"
+            detail="Error interno del servidor"
+        )
+
+@router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar un documento")
+async def delete_document_endpoint(
+    document_id: str,
+    current_user: Annotated[UserModel, Depends(get_current_active_user)],
+    db: Session = Depends(get_db)
+):
+    """
+    Elimina un documento específico del usuario autenticado.
+    
+    - **document_id**: ID único del documento a eliminar
+    
+    Retorna 204 No Content si se eliminó exitosamente.
+    Retorna 404 si el documento no existe o no pertenece al usuario.
+    """
+    try:
+        # Convertir string a UUID
+        doc_uuid = uuid.UUID(document_id)
+        
+        # Verificar que el documento existe y pertenece al usuario
+        db_document = get_document_by_id(db, doc_uuid)
+        if not db_document:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Documento no encontrado"
+            )
+        
+        # Verificar que el documento pertenece al usuario actual
+        if db_document.user_id != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No tienes permisos para eliminar este documento"
+            )
+        
+        # Eliminar el documento
+        success = delete_document(db, doc_uuid)
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Documento no encontrado"
+            )
+        
+        logger.info(f"Document {document_id} deleted successfully by user {current_user.id}")
+        
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="ID de documento inválido"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting document {document_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor"
+        )
+
+@router.get("/", summary="Listar documentos del usuario")
+async def list_user_documents(
+    current_user: Annotated[UserModel, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+    skip: int = Query(0, ge=0, description="Número de documentos a omitir"),
+    limit: int = Query(100, ge=1, le=1000, description="Número máximo de documentos a retornar")
+):
+    """
+    Lista todos los documentos del usuario autenticado con paginación.
+    
+    - **skip**: Número de documentos a omitir (para paginación)
+    - **limit**: Número máximo de documentos a retornar (máximo 1000)
+    
+    Retorna una lista de documentos con sus metadatos.
+    """
+    try:
+        documents = get_documents_by_user(db, current_user.id, skip=skip, limit=limit)
+        
+        # Convertir a formato de respuesta
+        documents_response = []
+        for doc in documents:
+            documents_response.append({
+                "id": str(doc.id),
+                "original_filename": doc.original_filename,
+                "document_type": doc.document_type,
+                "status": doc.status,
+                "uploaded_at": doc.uploaded_at.isoformat(),
+                "processed_at": doc.processed_at.isoformat() if doc.processed_at else None,
+                "processing_error": doc.processing_error
+            })
+        
+        return {
+            "documents": documents_response,
+            "total": len(documents_response),
+            "skip": skip,
+            "limit": limit
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing documents for user {current_user.id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor"
         )
 
 @router.get("/{document_id}/extracted_data", summary="Obtener datos extraídos de un documento")

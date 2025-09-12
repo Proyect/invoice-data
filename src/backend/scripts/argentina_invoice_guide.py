@@ -211,6 +211,6 @@ if __name__ == '__main__':
     
     # Crear dataset.yaml optimizado
     yaml_content = create_optimized_yaml()
-    with open('yolo/dataset_argentina.yaml', 'w', encoding='utf-8') as f:
+    with open('../yolo/dataset_argentina.yaml', 'w', encoding='utf-8') as f:
         f.write(yaml_content)
     print(f"\n✅ Dataset YAML creado: yolo/dataset_argentina.yaml")

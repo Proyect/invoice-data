@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import Response
 from datetime import timedelta
 from typing import Annotated
 from sqlalchemy.orm import Session
@@ -10,6 +11,28 @@ from config import ACCESS_TOKEN_EXPIRE_MINUTES # Definir en config.py
 from database import get_db
 
 router = APIRouter()
+
+@router.options("/token")
+async def options_token():
+    """
+    Maneja las peticiones OPTIONS (preflight) para CORS
+    """
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
+
+@router.get("/token")
+async def get_token():
+    """
+    Endpoint GET para verificar que el token está disponible
+    """
+    return {"message": "Token endpoint is available"}
 
 @router.post("/token", response_model=Token, summary="Obtener token de acceso")
 async def login_for_access_token(

@@ -18,6 +18,7 @@ celery_app.conf.update(
     task_serializer='json',
     accept_content=['json'],
     result_serializer='json',
+    result_expires=3600,  # 1 hora
     timezone='America/Argentina/Buenos_Aires',
     enable_utc=True,
     task_track_started=True,
@@ -25,5 +26,9 @@ celery_app.conf.update(
     task_soft_time_limit=25 * 60,  # 25 minutos
     worker_prefetch_multiplier=1,
     worker_max_tasks_per_child=1000,
+    # Configuración simplificada para evitar errores de backend
+    result_backend_transport_options={
+        'visibility_timeout': 3600,
+    },
 )
 
