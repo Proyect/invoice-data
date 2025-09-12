@@ -1,6 +1,8 @@
 # ocr_api/main.py
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from api.v1 import auth, documents
 from database import create_db_and_tables # Importa la función de creación de tablas
 
@@ -8,6 +10,21 @@ app = FastAPI(
     title="OCR Document Processor API",
     description="API para subir, procesar y extraer datos de documentos oficiales y facturas.",
     version="1.0.0",
+)
+
+# Definir orígenes permitidos
+origins = [
+    "http://localhost:3000",  #  frontend
+    "http://127.0.0.1:3000",
+]
+
+# Configurar CORS ANTES de los routers
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # access from frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Incluir los routers

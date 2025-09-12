@@ -4,9 +4,8 @@ Script para ejecutar la API localmente con configuración de desarrollo
 """
 import os
 import sys
-import uvicorn
 
-# Configurar variables de entorno para desarrollo local
+# IMPORTANTE: Configurar variables de entorno ANTES de importar cualquier módulo
 os.environ['DATABASE_URL'] = 'sqlite:///./test.db'
 os.environ['REDIS_HOST'] = 'localhost'
 os.environ['REDIS_PORT'] = '6379'
@@ -18,6 +17,9 @@ os.environ['YOLO_MODELS_PATH'] = './models/yolo_models'
 
 # Agregar el directorio actual al path
 sys.path.append('.')
+
+# Ahora importar uvicorn después de configurar las variables de entorno
+import uvicorn
 
 if __name__ == "__main__":
     print("Iniciando API en modo desarrollo local...")

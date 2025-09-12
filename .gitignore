@@ -33,3 +33,5 @@ __pycache__/
 /models/yolo_models/*
 
 /models/yolo_models/.gitkeep   # dejamos un placeholder
+
+/node_modules/
