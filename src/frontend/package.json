@@ -1,0 +1,63 @@
+{
+  "name": "ocr-document-processor-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para el sistema de procesamiento de documentos OCR",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.56",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "axios": "^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.7.4",
+    "web-vitals": "^2.1.4",
+    "@mui/material": "^5.14.0",
+    "@mui/icons-material": "^5.14.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/x-data-grid": "^6.10.0",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
+    "date-fns": "^2.30.0",
+    "recharts": "^2.7.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "docker:build": "docker build -t ocr-frontend .",
+    "docker:build:dev": "docker build -f Dockerfile.dev -t ocr-frontend-dev .",
+    "docker:run": "docker run -d --name ocr-frontend -p 3000:80 ocr-frontend",
+    "docker:run:dev": "docker run -d --name ocr-frontend-dev -p 3000:3000 -v $(pwd):/app -v /app/node_modules ocr-frontend-dev",
+    "docker:stop": "docker stop ocr-frontend ocr-frontend-dev",
+    "docker:clean": "docker rm ocr-frontend ocr-frontend-dev && docker rmi ocr-frontend ocr-frontend-dev"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:8000"
+}
+
