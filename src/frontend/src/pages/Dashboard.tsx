@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { /*useEffect, useState,*/ useMemo } from 'react';
 import {
   Container,
   Grid,
@@ -22,7 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
-import { DocumentType } from '../types/document';
+//import { DocumentType } from '../types/document';
 import { getDocumentTypeLabel, getStatusColor } from '../utils/documentUtils';
 import { logRender } from '../utils/debugUtils';
 

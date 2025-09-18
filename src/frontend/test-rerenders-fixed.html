@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Re-renders - Solucionado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .code {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 3px solid #007bff;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Problema de Re-renders Solucionado</h1>
+        
+        <div class="status success">
+            ✅ <strong>Problema identificado y solucionado</strong>
+        </div>
+
+        <h2>🚨 Problema Principal Encontrado:</h2>
+        <div class="code">
+// ❌ ANTES: Objeto contextValue se recreaba en cada render
+const contextValue: DocumentContextType = {
+  documents,
+  loading,
+  uploadDocument,
+  // ... otras propiedades
+};
+        </div>
+
+        <h2>✅ Solución Implementada:</h2>
+        <div class="code">
+// ✅ DESPUÉS: Usando useMemo para estabilizar el valor
+const contextValue: DocumentContextType = useMemo(() => ({
+  documents,
+  loading,
+  uploadDocument,
+  // ... otras propiedades
+}), [documents, loading, uploadDocument, /* ... dependencias */]);
+        </div>
+
+        <h2>📋 Cambios Realizados:</h2>
+        
+        <div class="step">
+            <h3>1. DocumentContext.tsx</h3>
+            <ul>
+                <li>✅ Agregado <code>useMemo</code> al import</li>
+                <li>✅ Envuelto <code>contextValue</code> con <code>useMemo</code></li>
+                <li>✅ Agregadas dependencias correctas al array de dependencias</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>2. AuthContext.tsx</h3>
+            <ul>
+                <li>✅ Agregado <code>useMemo</code> y <code>useCallback</code> al import</li>
+                <li>✅ Convertido <code>login</code> y <code>logout</code> a <code>useCallback</code></li>
+                <li>✅ Envuelto <code>value</code> con <code>useMemo</code></li>
+            </ul>
+        </div>
+
+        <h2>🎯 Resultado Esperado:</h2>
+        <div class="status info">
+            <strong>Los componentes ahora solo se re-renderizarán cuando:</strong>
+            <ul>
+                <li>Los datos reales cambien (documents, loading, user, token)</li>
+                <li>Las funciones cambien (lo cual ahora es estable gracias a useCallback)</li>
+                <li>NO se re-renderizarán por recreación innecesaria del objeto contexto</li>
+            </ul>
+        </div>
+
+        <h2>🔍 Cómo Verificar:</h2>
+        <div class="step">
+            <ol>
+                <li>Abre la consola del navegador</li>
+                <li>Navega por la aplicación</li>
+                <li>Observa que los contadores de render en <code>RenderCounter</code> ya no aumentan constantemente</li>
+                <li>Los logs de <code>DebugInfo</code> deberían ser mucho menos frecuentes</li>
+            </ol>
+        </div>
+
+        <div class="status warning">
+            <strong>Nota:</strong> Si aún ves re-renders frecuentes, revisa otros componentes que puedan estar causando actualizaciones de estado innecesarias.
+        </div>
+    </div>
+</body>
+</html>

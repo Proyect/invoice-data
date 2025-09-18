@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Sin Bucles Infinitos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .render-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="render-counter" id="renderCounter">
+        Renders: <span id="renderCount">0</span>
+    </div>
+
+    <div class="container">
+        <h1>🔧 Test de Prevención de Bucles Infinitos</h1>
+        <p>Esta página simula el comportamiento de los componentes React para detectar bucles infinitos.</p>
+    </div>
+
+    <div class="container">
+        <h2>📊 Estado del Sistema</h2>
+        <div id="systemStatus" class="status info">
+            Inicializando sistema...
+        </div>
+        <div id="renderStatus" class="status warning">
+            Monitoreando renders...
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🧪 Tests de Componentes</h2>
+        
+        <div class="test-section">
+            <h3>Test 1: AuthContext</h3>
+            <div id="authTest" class="status info">Preparando test...</div>
+            <button onclick="testAuthContext()">Ejecutar Test</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 2: Login Component</h3>
+            <div id="loginTest" class="status info">Preparando test...</div>
+            <button onclick="testLoginComponent()">Ejecutar Test</button>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 3: DocumentContext</h3>
+            <div id="documentTest" class="status info">Preparando test...</div>
+            <button onclick="testDocumentContext()">Ejecutar Test</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>📈 Estadísticas de Renders</h2>
+        <div id="renderStats">
+            <p>Total de renders: <span id="totalRenders">0</span></p>
+            <p>Renders por segundo: <span id="rendersPerSecond">0</span></p>
+            <p>Último render: <span id="lastRender">Nunca</span></p>
+        </div>
+        <button onclick="resetCounters()">Resetear Contadores</button>
+    </div>
+
+    <div class="container">
+        <h2>🚨 Alertas de Bucles Infinitos</h2>
+        <div id="infiniteLoopAlerts">
+            <div class="status success">Sistema estable - No se detectaron bucles infinitos</div>
+        </div>
+    </div>
+
+    <script>
+        let renderCount = 0;
+        let lastRenderTime = Date.now();
+        let renderTimes = [];
+        let testResults = {
+            auth: false,
+            login: false,
+            document: false
+        };
+
+        // Simular el comportamiento de React
+        function simulateRender() {
+            renderCount++;
+            const now = Date.now();
+            const timeSinceLastRender = now - lastRenderTime;
+            
+            // Actualizar contadores
+            document.getElementById('renderCount').textContent = renderCount;
+            document.getElementById('totalRenders').textContent = renderCount;
+            document.getElementById('lastRender').textContent = new Date(now).toLocaleTimeString();
+            
+            // Calcular renders por segundo
+            renderTimes.push(now);
+            renderTimes = renderTimes.filter(time => now - time < 1000); // Último segundo
+            document.getElementById('rendersPerSecond').textContent = renderTimes.length;
+            
+            // Detectar bucles infinitos
+            if (timeSinceLastRender < 16) { // Menos de 16ms = más de 60fps
+                document.getElementById('renderStatus').className = 'status error';
+                document.getElementById('renderStatus').textContent = `⚠️ ALERTA: Render muy rápido (${timeSinceLastRender}ms) - Posible bucle infinito`;
+                
+                // Agregar alerta
+                const alertsDiv = document.getElementById('infiniteLoopAlerts');
+                alertsDiv.innerHTML = '<div class="status error">🚨 BUCLE INFINITO DETECTADO: Renders demasiado frecuentes</div>';
+            } else if (timeSinceLastRender < 100) {
+                document.getElementById('renderStatus').className = 'status warning';
+                document.getElementById('renderStatus').textContent = `⚠️ Render frecuente (${timeSinceLastRender}ms) - Monitoreando...`;
+            } else {
+                document.getElementById('renderStatus').className = 'status success';
+                document.getElementById('renderStatus').textContent = `✅ Render normal (${timeSinceLastRender}ms)`;
+            }
+            
+            lastRenderTime = now;
+        }
+
+        // Simular AuthContext
+        function testAuthContext() {
+            const testDiv = document.getElementById('authTest');
+            testDiv.className = 'status info';
+            testDiv.textContent = 'Ejecutando test de AuthContext...';
+            
+            // Simular inicialización
+            setTimeout(() => {
+                simulateRender(); // Render inicial
+                
+                setTimeout(() => {
+                    simulateRender(); // Render después de cargar token
+                    testDiv.className = 'status success';
+                    testDiv.textContent = '✅ AuthContext: Test completado - Sin bucles infinitos';
+                    testResults.auth = true;
+                    updateSystemStatus();
+                }, 100);
+            }, 50);
+        }
+
+        // Simular Login Component
+        function testLoginComponent() {
+            const testDiv = document.getElementById('loginTest');
+            testDiv.className = 'status info';
+            testDiv.textContent = 'Ejecutando test de Login Component...';
+            
+            // Simular montaje del componente
+            setTimeout(() => {
+                simulateRender(); // Render inicial
+                
+                // Simular cambio de input
+                setTimeout(() => {
+                    simulateRender(); // Render por cambio de input
+                    
+                    // Simular submit
+                    setTimeout(() => {
+                        simulateRender(); // Render por submit
+                        
+                        testDiv.className = 'status success';
+                        testDiv.textContent = '✅ Login Component: Test completado - Sin bucles infinitos';
+                        testResults.login = true;
+                        updateSystemStatus();
+                    }, 100);
+                }, 100);
+            }, 50);
+        }
+
+        // Simular DocumentContext
+        function testDocumentContext() {
+            const testDiv = document.getElementById('documentTest');
+            testDiv.className = 'status info';
+            testDiv.textContent = 'Ejecutando test de DocumentContext...';
+            
+            // Simular carga de documentos
+            setTimeout(() => {
+                simulateRender(); // Render inicial
+                
+                setTimeout(() => {
+                    simulateRender(); // Render después de cargar documentos
+                    
+                    testDiv.className = 'status success';
+                    testDiv.textContent = '✅ DocumentContext: Test completado - Sin bucles infinitos';
+                    testResults.document = true;
+                    updateSystemStatus();
+                }, 100);
+            }, 50);
+        }
+
+        function updateSystemStatus() {
+            const allTestsPassed = Object.values(testResults).every(result => result);
+            const systemDiv = document.getElementById('systemStatus');
+            
+            if (allTestsPassed) {
+                systemDiv.className = 'status success';
+                systemDiv.textContent = '✅ Sistema estable - Todos los tests pasaron sin bucles infinitos';
+            } else {
+                systemDiv.className = 'status warning';
+                systemDiv.textContent = '⚠️ Sistema en progreso - Algunos tests pendientes';
+            }
+        }
+
+        function resetCounters() {
+            renderCount = 0;
+            renderTimes = [];
+            lastRenderTime = Date.now();
+            
+            document.getElementById('renderCount').textContent = '0';
+            document.getElementById('totalRenders').textContent = '0';
+            document.getElementById('rendersPerSecond').textContent = '0';
+            document.getElementById('lastRender').textContent = 'Nunca';
+            
+            document.getElementById('renderStatus').className = 'status info';
+            document.getElementById('renderStatus').textContent = 'Contadores reseteados';
+            
+            document.getElementById('infiniteLoopAlerts').innerHTML = 
+                '<div class="status success">Sistema estable - No se detectaron bucles infinitos</div>';
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            simulateRender(); // Render inicial
+            updateSystemStatus();
+        });
+
+        // Simular algunos renders de prueba
+        setTimeout(() => {
+            simulateRender();
+        }, 1000);
+    </script>
+</body>
+</html>

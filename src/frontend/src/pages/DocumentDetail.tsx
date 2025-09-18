@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState/*, useEffect */} from 'react';
 import {
   Container,
   Typography,
@@ -68,11 +68,11 @@ const DocumentDetail: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [tabValue, setTabValue] = useState(0);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (id) {
       loadDocumentData();
     }
-  }, [id]);
+  }, [id]);*/
 
   const loadDocumentData = async () => {
     if (!id) return;

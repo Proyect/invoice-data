@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Re-renders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #console-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Re-renders del Frontend</h1>
+        
+        <div class="test-section">
+            <h2>1. Verificar Frontend</h2>
+            <p>El frontend debería estar ejecutándose en <strong>http://localhost:3000</strong></p>
+            <button onclick="checkFrontend()">Verificar Frontend</button>
+            <div id="frontend-status" class="status info">Esperando verificación...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Verificar Backend</h2>
+            <p>El backend debería estar ejecutándose en <strong>http://localhost:8000</strong></p>
+            <button onclick="checkBackend()">Verificar Backend</button>
+            <div id="backend-status" class="status info">Esperando verificación...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Test de Re-renders</h2>
+            <p>Monitorear la consola del navegador para ver los contadores de renders</p>
+            <button onclick="openFrontend()">Abrir Frontend</button>
+            <button onclick="clearConsole()">Limpiar Consola</button>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Instrucciones de Prueba</h2>
+            <ol>
+                <li>Abre el frontend en <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+                <li>Abre las herramientas de desarrollador (F12)</li>
+                <li>Ve a la pestaña "Console"</li>
+                <li>Observa los contadores de renders en la esquina superior derecha</li>
+                <li>Navega entre páginas y observa si los contadores aumentan constantemente</li>
+                <li>Si los contadores se mantienen estables, el problema está resuelto</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Consola de Debug</h2>
+            <div id="console-output"></div>
+            <button onclick="startConsoleMonitoring()">Iniciar Monitoreo</button>
+        </div>
+    </div>
+
+    <script>
+        function checkFrontend() {
+            fetch('http://localhost:3000')
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('frontend-status').innerHTML = '✅ Frontend funcionando correctamente';
+                        document.getElementById('frontend-status').className = 'status success';
+                    } else {
+                        throw new Error('Frontend no responde correctamente');
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('frontend-status').innerHTML = '❌ Frontend no disponible: ' + error.message;
+                    document.getElementById('frontend-status').className = 'status error';
+                });
+        }
+
+        function checkBackend() {
+            fetch('http://localhost:8000/docs')
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('backend-status').innerHTML = '✅ Backend funcionando correctamente';
+                        document.getElementById('backend-status').className = 'status success';
+                    } else {
+                        throw new Error('Backend no responde correctamente');
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('backend-status').innerHTML = '❌ Backend no disponible: ' + error.message;
+                    document.getElementById('backend-status').className = 'status error';
+                });
+        }
+
+        function openFrontend() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+        }
+
+        function startConsoleMonitoring() {
+            const output = document.getElementById('console-output');
+            output.innerHTML += '🔍 Iniciando monitoreo de consola...\n';
+            output.innerHTML += '📝 Abre la consola del navegador para ver los logs de renders\n';
+            output.innerHTML += '⏰ ' + new Date().toLocaleTimeString() + ' - Monitoreo iniciado\n';
+        }
+
+        // Auto-verificar al cargar la página
+        window.onload = function() {
+            checkFrontend();
+            checkBackend();
+        };
+    </script>
+</body>
+</html>
+

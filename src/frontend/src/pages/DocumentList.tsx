@@ -38,6 +38,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import { DocumentType } from '../types/document';
 import { getDocumentTypeLabel, getStatusColor, getStatusLabel, formatDate } from '../utils/documentUtils';
+import RenderCounter from '../components/RenderCounter';
+import NotificationToast from '../components/NotificationToast';
 
 const DocumentList: React.FC = () => {
   const navigate = useNavigate();
@@ -50,6 +52,13 @@ const DocumentList: React.FC = () => {
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState<string | null>(null);
+  
+  // Estados para notificaciones
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error' | 'warning' | 'info'
+  });
 
   const itemsPerPage = 10;
 
@@ -113,13 +122,19 @@ const DocumentList: React.FC = () => {
         const document = documents.find(doc => doc.id === selectedDocument);
         if (document) {
           await downloadDocument(selectedDocument, document.original_filename);
-          // El toast de éxito se maneja en el contexto
+          setNotification({
+            open: true,
+            message: `Archivo "${document.original_filename}" descargado exitosamente`,
+            severity: 'success'
+          });
         }
       } catch (error: any) {
         console.error('Error downloading document:', error);
-        // Mostrar mensaje de error específico
-        const errorMessage = error.response?.data?.detail || error.message || 'Error al descargar el documento';
-        alert(`Error: ${errorMessage}`);
+        setNotification({
+          open: true,
+          message: error.message || 'Error al descargar el documento',
+          severity: 'error'
+        });
       }
     }
     handleMenuClose();
@@ -144,6 +159,10 @@ const DocumentList: React.FC = () => {
     setDocumentToDelete(null);
   };
 
+  const handleCloseNotification = () => {
+    setNotification(prev => ({ ...prev, open: false }));
+  };
+
 
   const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
@@ -162,6 +181,7 @@ const DocumentList: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <RenderCounter componentName="DocumentList" />
       <Typography variant="h4" gutterBottom>
         Documentos
       </Typography>
@@ -351,6 +371,14 @@ const DocumentList: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Notificación Toast */}
+      <NotificationToast
+        open={notification.open}
+        message={notification.message}
+        severity={notification.severity}
+        onClose={handleCloseNotification}
+      />
     </Container>
   );
 };

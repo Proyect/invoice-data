@@ -104,15 +104,37 @@ class ApiService {
     console.log(`Iniciando descarga del documento: ${documentId}`);
     try {
       const response = await this.api.get(`/documents/${documentId}/download`, {
-        responseType: 'blob'
+        responseType: 'blob',
+        timeout: 60000 // 60 segundos para descargas
       });
+      
       console.log(`Descarga exitosa, tamaño del blob: ${response.data.size} bytes`);
+      
+      // Verificar que el blob no esté vacío
+      if (!response.data || response.data.size === 0) {
+        throw new Error('El archivo descargado está vacío');
+      }
+      
       return response.data;
     } catch (error: any) {
       console.error('Error en downloadDocument:', error);
       console.error('Response status:', error.response?.status);
       console.error('Response data:', error.response?.data);
-      throw error;
+      
+      // Mejorar el mensaje de error
+      if (error.response?.status === 404) {
+        throw new Error('El archivo no fue encontrado en el servidor');
+      } else if (error.response?.status === 403) {
+        throw new Error('No tienes permisos para descargar este archivo');
+      } else if (error.response?.status === 500) {
+        throw new Error('Error interno del servidor al descargar el archivo');
+      } else if (error.code === 'ECONNABORTED') {
+        throw new Error('La descarga tardó demasiado tiempo');
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Error desconocido al descargar el archivo');
+      }
     }
   }
 }

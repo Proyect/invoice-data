@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { documentService } from '../services/api';
 import { Document, DocumentStatus, DocumentType, DocumentUploadResponse } from './../types/document';
 import { useAuth } from './SimpleAuthContext';
@@ -32,58 +32,12 @@ interface DocumentProviderProps {
 export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(false);
-  const { user, token } = useAuth();
+  
+  // Obtener estado de autenticación
+  const { token } = useAuth();
 
-  // Cargar documentos solo cuando el usuario esté autenticado
-  useEffect(() => {
-    let isMounted = true;
-    
-    const loadDocuments = async () => {
-      // ✅ Solo cargar si hay usuario autenticado y token
-      if (!user || !token) {
-        console.log('Usuario no autenticado, saltando carga de documentos');
-        return;
-      }
-      
-      try {
-        setLoading(true);
-        console.log('Cargando documentos iniciales...');
-        const response = await documentService.getDocuments();
-        
-        if (isMounted) {
-          const documentsList = response.documents
-            .map((doc: any) => ({
-              id: doc.id,
-              original_filename: doc.original_filename,
-              status: doc.status,
-              message: '',
-              document_type: doc.document_type,
-              uploaded_at: doc.uploaded_at,
-              processed_at: doc.processed_at,
-              processing_error: doc.processing_error
-            }))
-            .sort((a: Document, b: Document) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
-          
-          setDocuments(documentsList);
-        }
-      } catch (error: any) {
-        console.error('Error loading initial documents:', error);
-        console.error('Error details:', error.response?.data);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-    
-    loadDocuments();
-    
-    return () => {
-      isMounted = false;
-    };
-  }, [user, token]); // ✅ Ejecutar cuando cambie la autenticación
-
-  const uploadDocument = useCallback(async (file: File, documentType: DocumentType): Promise<DocumentUploadResponse> => {
+  // Funciones simples sin useCallback
+  const uploadDocument = async (file: File, documentType: DocumentType): Promise<DocumentUploadResponse> => {
     setLoading(true);
     try {
       const response = await documentService.uploadDocument(file, documentType);
@@ -104,21 +58,21 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const getDocumentStatus = useCallback(async (documentId: string): Promise<DocumentStatus> => {
+  const getDocumentStatus = async (documentId: string): Promise<DocumentStatus> => {
     return await documentService.getDocumentStatus(documentId);
-  }, []);
+  };
 
-  const getExtractedData = useCallback(async (documentId: string): Promise<any> => {
+  const getExtractedData = async (documentId: string): Promise<any> => {
     return await documentService.getExtractedData(documentId);
-  }, []);
+  };
 
-  const getStructuredData = useCallback(async (documentId: string): Promise<any> => {
+  const getStructuredData = async (documentId: string): Promise<any> => {
     return await documentService.getStructuredData(documentId);
-  }, []);
+  };
 
-  const deleteDocument = useCallback(async (documentId: string): Promise<void> => {
+  const deleteDocument = async (documentId: string): Promise<void> => {
     setLoading(true);
     try {
       await documentService.deleteDocument(documentId);
@@ -126,39 +80,52 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
-  const downloadDocument = useCallback(async (documentId: string, filename: string): Promise<void> => {
-    const blob = await documentService.downloadDocument(documentId);
-    
-    if (!blob || blob.size === 0) {
-      throw new Error('El archivo descargado está vacío o corrupto');
+  const downloadDocument = async (documentId: string, filename: string): Promise<void> => {
+    try {
+      console.log(`🔄 Iniciando descarga: ${documentId} - ${filename}`);
+      
+      const blob = await documentService.downloadDocument(documentId);
+      
+      if (!blob || blob.size === 0) {
+        throw new Error('El archivo descargado está vacío o corrupto');
+      }
+      
+      console.log(`✅ Blob descargado: ${blob.size} bytes`);
+      
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.style.display = 'none';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 100);
+      
+      console.log(`✅ Descarga completada: ${filename}`);
+      
+    } catch (error: any) {
+      console.error('❌ Error en descarga:', error);
+      throw new Error(`Error al descargar el archivo: ${error.message}`);
     }
-    
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.style.display = 'none';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    setTimeout(() => {
-      window.URL.revokeObjectURL(url);
-    }, 100);
-  }, []);
+  };
 
-  const refreshDocuments = useCallback(async (): Promise<void> => {
-    // ✅ Solo refrescar si hay usuario autenticado
-    if (!user || !token) {
-      console.log('Usuario no autenticado, saltando refresh de documentos');
+  const refreshDocuments = async (): Promise<void> => {
+    // Solo cargar documentos si hay token
+    if (!token) {
+      console.log('⏳ No hay token, saltando carga de documentos');
       return;
     }
     
     setLoading(true);
     try {
+      console.log('🔄 Cargando documentos...');
       const response = await documentService.getDocuments();
       const documentsList = response.documents
         .map((doc: any) => ({
@@ -178,10 +145,9 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     } finally {
       setLoading(false);
     }
-  }, [user, token]); // ✅ Dependencias de autenticación
+  };
 
-  // Crear valor del contexto de forma estable
-  const contextValue = {
+  const value = {
     documents,
     loading,
     uploadDocument,
@@ -194,7 +160,7 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
   };
 
   return (
-    <DocumentContext.Provider value={contextValue}>
+    <DocumentContext.Provider value={value}>
       {children}
     </DocumentContext.Provider>
   );

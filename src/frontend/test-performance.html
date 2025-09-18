@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Rendimiento - Re-renders Solucionados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #2196F3;
+            background-color: #f8f9fa;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+        .code {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .metric {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .metric.good {
+            background: #28a745;
+        }
+        .metric.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        .metric.bad {
+            background: #dc3545;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .monitor-preview {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Test de Rendimiento - Re-renders Solucionados</h1>
+            <p>Verificación de la optimización de contextos React</p>
+        </div>
+
+        <div class="test-section success">
+            <h2>✅ Problema Solucionado</h2>
+            <p>Se ha implementado <code>useMemo</code> en ambos contextos para evitar re-renders innecesarios.</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Instrucciones para la Prueba:</h3>
+            <ol>
+                <li><strong>Inicia la aplicación:</strong> Asegúrate de que tanto el frontend como el backend estén ejecutándose</li>
+                <li><strong>Abre la consola del navegador:</strong> F12 → Console</li>
+                <li><strong>Observa el monitor de rendimiento:</strong> Verás un panel en la esquina superior izquierda</li>
+                <li><strong>Navega por la aplicación:</strong> Ve a diferentes páginas y observa los contadores</li>
+                <li><strong>Verifica los logs:</strong> Los logs de render deberían ser mucho menos frecuentes</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Qué Observar en el Monitor de Rendimiento:</h3>
+            <div class="monitor-preview">
+🔧 Performance Monitor
+Total Renders: <span class="metric good">2</span>
+DocumentProvider: <span class="metric good">1</span>
+DocumentList: <span class="metric good">1</span>
+AuthProvider: <span class="metric good">1</span>
+Last: 10:30:45 AM
+Documents: 0
+Loading: No
+User: None
+            </div>
+        </div>
+
+        <div class="test-section info">
+            <h3>📊 Métricas Esperadas (ANTES vs DESPUÉS):</h3>
+            
+            <div class="step">
+                <h4>❌ ANTES (Problemático):</h4>
+                <div class="metric bad">Total Renders: 50+</div>
+                <div class="metric bad">DocumentProvider: 20+</div>
+                <div class="metric bad">DocumentList: 15+</div>
+                <div class="metric bad">AuthProvider: 10+</div>
+                <p><em>Los contadores aumentaban constantemente sin interacción del usuario</em></p>
+            </div>
+
+            <div class="step">
+                <h4>✅ DESPUÉS (Optimizado):</h4>
+                <div class="metric good">Total Renders: 2-5</div>
+                <div class="metric good">DocumentProvider: 1-2</div>
+                <div class="metric good">DocumentList: 1-2</div>
+                <div class="metric good">AuthProvider: 1-2</div>
+                <p><em>Los contadores solo aumentan cuando hay cambios reales de datos</em></p>
+            </div>
+        </div>
+
+        <div class="test-section warning">
+            <h3>🧪 Pruebas a Realizar:</h3>
+            <div class="step">
+                <strong>1. Carga Inicial:</strong> Los contadores deberían ser bajos (1-3 renders por componente)
+            </div>
+            <div class="step">
+                <strong>2. Navegación:</strong> Al cambiar de página, los contadores deberían aumentar mínimamente
+            </div>
+            <div class="step">
+                <strong>3. Interacción:</strong> Al hacer clic en botones o cambiar filtros, solo los componentes relevantes deberían re-renderizarse
+            </div>
+            <div class="step">
+                <strong>4. Consola:</strong> Los logs de render deberían ser esporádicos, no constantes
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Cambios Técnicos Implementados:</h3>
+            <div class="code">
+// DocumentContext.tsx - ANTES
+const contextValue = {
+  documents,
+  loading,
+  uploadDocument,
+  // ... otras propiedades
+};
+
+// DocumentContext.tsx - DESPUÉS
+const contextValue = useMemo(() => ({
+  documents,
+  loading,
+  uploadDocument,
+  // ... otras propiedades
+}), [documents, loading, uploadDocument, /* dependencias */]);
+            </div>
+        </div>
+
+        <div class="test-section success">
+            <h3>🎯 Resultado Esperado:</h3>
+            <p>Si la optimización funcionó correctamente, deberías ver:</p>
+            <ul>
+                <li>✅ Contadores de render estables y bajos</li>
+                <li>✅ Logs de consola menos frecuentes</li>
+                <li>✅ Mejor rendimiento general de la aplicación</li>
+                <li>✅ No más re-renders constantes sin interacción del usuario</li>
+            </ul>
+        </div>
+
+        <div class="test-section info">
+            <h3>🚀 Próximos Pasos:</h3>
+            <p>Una vez verificado que los re-renders se han solucionado, puedes:</p>
+            <ul>
+                <li>Remover los componentes de debug (<code>RenderCounter</code>, <code>DebugInfo</code>, <code>PerformanceMonitor</code>)</li>
+                <li>Continuar con el desarrollo normal de la aplicación</li>
+                <li>Implementar optimizaciones adicionales si es necesario</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { authService } from '../services/api';
 import { User, LoginCredentials } from '../types/auth';
-import SimpleDebug from '../components/SimpleDebug';
 
 interface AuthContextType {
   user: User | null;
@@ -29,23 +28,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Cargar token solo una vez al montar
+  // Cargar token al inicializar
   useEffect(() => {
-    let isMounted = true;
-    
-    const initializeAuth = async () => {
+    const initializeAuth = () => {
       try {
-        console.log('🔐 Inicializando autenticación...');
         const storedToken = localStorage.getItem('token');
-        
-        if (storedToken && isMounted) {
-          console.log('🔑 Token encontrado en localStorage');
+        if (storedToken) {
           setToken(storedToken);
-          
-          // Aquí podrías validar el token con el backend
-          // Por ahora, asumimos que el token es válido
           setUser({
             id: '1',
             username: 'user',
@@ -53,26 +43,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             full_name: 'Usuario',
             disabled: false
           });
-        } else {
-          console.log('❌ No hay token en localStorage');
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-          setIsInitialized(true);
-          console.log('✅ Autenticación inicializada');
-        }
+        setLoading(false);
       }
     };
 
     initializeAuth();
-    
-    return () => {
-      isMounted = false;
-    };
-  }, []); // Array vacío para ejecutar solo una vez
+  }, []);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
@@ -89,7 +69,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(access_token);
       localStorage.setItem('token', access_token);
       
-      // Obtener información del usuario (esto dependería de tu API)
       setUser({
         id: '1',
         username: credentials.username,
@@ -111,21 +90,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('token');
   }, []);
 
-  // Crear el valor del contexto de forma estable usando useMemo
-  // Solo incluir las dependencias que realmente cambian
   const value = useMemo(() => ({
     user,
     token,
     login,
     logout,
     loading
-  }), [user, token, loading, login, logout]);
+  }), [user, token, login, logout, loading]); // ✅ Todas las dependencias incluidas
 
   return (
     <AuthContext.Provider value={value}>
-      <SimpleDebug componentName="AuthProvider" />
       {children}
     </AuthContext.Provider>
   );
 };
-
