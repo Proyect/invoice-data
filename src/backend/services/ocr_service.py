@@ -8,6 +8,14 @@ from PIL import Image
 from services.model_loader import load_yolo_model, YOLO_MODELS_PATH
 from models.documents import DocumentType # Para usar los ENUMS de tipos de documento
 
+def is_tesseract_available() -> bool:
+    """Verifica si Tesseract está disponible en el sistema."""
+    try:
+        pytesseract.get_tesseract_version()
+        return True
+    except:
+        return False
+
 def perform_ocr_with_tesseract(cropped_image_np_array: np.ndarray, lang: str = 'spa', psm: int = 7) -> str:
     """
     Realiza OCR usando Tesseract en una imagen recortada (array de NumPy).
@@ -21,6 +29,16 @@ def perform_ocr_with_tesseract(cropped_image_np_array: np.ndarray, lang: str = '
     # Asegúrate de que la imagen no esté en blanco (completamente negro o blanco)
     if np.all(cropped_image_np_array == 0) or np.all(cropped_image_np_array == 255):
         return ""
+
+    # Verificar si Tesseract está disponible
+    if not is_tesseract_available():
+        print(" Tesseract no está instalado. Usando texto simulado para desarrollo.")
+        # Generar texto simulado basado en el tamaño de la región
+        h, w = cropped_image_np_array.shape[:2]
+        if w > h * 3:  # Región ancha, probablemente texto largo
+            return f"TEXTO_SIMULADO_{w}x{h}"
+        else:  # Región más cuadrada, probablemente número o texto corto
+            return f"SIM_{w}{h}"
 
     pil_image = Image.fromarray(cropped_image_np_array)
     custom_config = f'--oem 3 --psm {psm}' # OEM 3 para motor LSTM, PSM según el campo
@@ -36,9 +54,9 @@ def perform_yolo_ocr(np_image_preprocessed: np.ndarray, document_type: DocumentT
 
     # Seleccionar el modelo YOLO adecuado
     if document_type in [DocumentType.DNI_FRONT, DocumentType.DNI_BACK]:
-        yolo_model_name = "dni_yolov8.pt" # Aquí tu modelo entrenado para DNI
+        yolo_model_name = "dni_robust/weights/best.pt" # Modelo entrenado para DNI
     elif document_type in [DocumentType.INVOICE_A, DocumentType.INVOICE_B, DocumentType.INVOICE_C]:
-        yolo_model_name = "invoices_cpu_abs/weights/best.pt" # Tu modelo entrenado para facturas
+        yolo_model_name = "invoices_cpu_abs/weights/best.pt" # Modelo entrenado para facturas
     else:
         # Para el desarrollo inicial, usa un modelo genérico
         print(f"Advertencia: Tipo de documento {document_type} no tiene un modelo YOLO específico. Usando yolov8n.pt")

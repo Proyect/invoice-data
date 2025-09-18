@@ -1,0 +1,207 @@
+{
+  "timestamp": "C:\\Users\\amdiaz\\Desktop\\code\\Python\\v.13.13\\invoice-data\\src\\backend",
+  "progress_percentage": 100.0,
+  "summary": {
+    "models": 21,
+    "datasets": 5,
+    "services_ok": "4/4",
+    "config_ok": "3/3",
+    "docker_ok": "3/3"
+  },
+  "details": {
+    "models": [
+      {
+        "name": "yolov8n.pt",
+        "path": "models\\yolo_models\\yolov8n.pt",
+        "size_mb": 6.25
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\verify_run4\\weights\\best.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\verify_run4\\weights\\last.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\verify_run3\\weights\\best.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\verify_run3\\weights\\last.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\verify_run22\\weights\\best.pt",
+        "size_mb": 5.95
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\verify_run22\\weights\\last.pt",
+        "size_mb": 5.95
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\verify_run2\\weights\\best.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\verify_run2\\weights\\last.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\verify_run\\weights\\best.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\verify_run\\weights\\last.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\train_test_invoice\\weights\\best.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\train_test_invoice\\weights\\last.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\quick_15ep\\weights\\best.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\quick_15ep\\weights\\last.pt",
+        "size_mb": 5.96
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\invoices_cpu_abs\\weights\\best.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\invoices_cpu_abs\\weights\\last.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\dni_test\\weights\\best.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\dni_test\\weights\\last.pt",
+        "size_mb": 5.94
+      },
+      {
+        "name": "best.pt",
+        "path": "models\\yolo_models\\dni_optimized\\weights\\best.pt",
+        "size_mb": 5.92
+      },
+      {
+        "name": "last.pt",
+        "path": "models\\yolo_models\\dni_optimized\\weights\\last.pt",
+        "size_mb": 5.92
+      }
+    ],
+    "datasets": [
+      {
+        "name": "dni",
+        "images": 0,
+        "labels": 0
+      },
+      {
+        "name": "dni_robust",
+        "images": 250,
+        "labels": 102
+      },
+      {
+        "name": "invoices",
+        "images": 3,
+        "labels": 2
+      },
+      {
+        "name": "invoices_argentina",
+        "images": 14,
+        "labels": 2
+      },
+      {
+        "name": "invoices_robust",
+        "images": 15,
+        "labels": 15
+      }
+    ],
+    "services": [
+      {
+        "name": "auth_service.py",
+        "description": "Servicio de autenticación",
+        "status": "OK",
+        "size_kb": 3.3
+      },
+      {
+        "name": "document_service.py",
+        "description": "Servicio de documentos",
+        "status": "OK",
+        "size_kb": 3.1
+      },
+      {
+        "name": "ocr_service.py",
+        "description": "Servicio de OCR",
+        "status": "OK",
+        "size_kb": 4.8
+      },
+      {
+        "name": "task_queue_service.py",
+        "description": "Servicio de colas",
+        "status": "OK",
+        "size_kb": 2.0
+      }
+    ],
+    "config": [
+      {
+        "name": ".env.local",
+        "description": "Configuración local",
+        "status": "OK"
+      },
+      {
+        "name": ".env.docker",
+        "description": "Configuración Docker",
+        "status": "OK"
+      },
+      {
+        "name": "config.py",
+        "description": "Configuración principal",
+        "status": "OK"
+      }
+    ],
+    "docker": [
+      {
+        "name": "docker-compose.yml",
+        "description": "Orquestación de servicios",
+        "status": "OK"
+      },
+      {
+        "name": "Dockerfile",
+        "description": "Imagen de la aplicación",
+        "status": "OK"
+      },
+      {
+        "name": ".dockerignore",
+        "description": "Exclusiones de Docker",
+        "status": "OK"
+      }
+    ]
+  }
+}

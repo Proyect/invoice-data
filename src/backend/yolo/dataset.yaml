@@ -1,12 +1,12 @@
-path: ./data/annotations
-train: images/train
-val: images/val
+train: C:/Users/amdiaz/Desktop/code/Python/v.13.13/invoice-data/src/backend/datasets/invoices/images/train
+val: C:/Users/amdiaz/Desktop/code/Python/v.13.13/invoice-data/src/backend/datasets/invoices/images/val
+test: C:/Users/amdiaz/Desktop/code/Python/v.13.13/invoice-data/src/backend/datasets/invoices/images/test
 names:
-0: invoice_number
-1: date
-2: vendor
-3: cuit
-4: subtotal
-5: tax
-6: total
-7: items_table
+  0: invoice_number
+  1: date
+  2: vendor
+  3: cuit
+  4: subtotal
+  5: tax
+  6: total
+  7: items_table

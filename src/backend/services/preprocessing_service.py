@@ -5,23 +5,34 @@ def preprocess_image_for_ocr(np_image: np.ndarray) -> np.ndarray:
     """
     Realiza un preprocesamiento básico en una imagen para mejorar la precisión del OCR.
     Acepta una imagen OpenCV (np.ndarray) y retorna una imagen preprocesada.
+    IMPORTANTE: Mantiene 3 canales RGB para compatibilidad con YOLO.
     """
     if np_image is None:
         raise ValueError("Input image is None.")
 
-    # 1. Escala de grises
+    # Asegurar que la imagen tenga 3 canales (RGB/BGR)
+    if len(np_image.shape) == 2:
+        # Si es escala de grises, convertir a 3 canales
+        np_image = cv2.cvtColor(np_image, cv2.COLOR_GRAY2BGR)
+    elif np_image.shape[2] == 4:
+        # Si tiene canal alpha, convertir a BGR
+        np_image = cv2.cvtColor(np_image, cv2.COLOR_BGRA2BGR)
+
+    # 1. Crear versión en escala de grises para procesamiento
     gray = cv2.cvtColor(np_image, cv2.COLOR_BGR2GRAY)
 
     # 2. Suavizado para reducir ruido (Filtro Gaussiano)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     
     doc_aligned = deskew_image(blurred)
-    processed_image = correct_perspective(doc_aligned)
+    processed_gray = correct_perspective(doc_aligned)
 
-    # 3. Binarización Adaptativa
-    final_processed_image = cv2.adaptiveThreshold(processed_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                   cv2.THRESH_BINARY, 11, 2)    
+    # 3. Binarización Adaptativa en escala de grises
+    binary_image = cv2.adaptiveThreshold(processed_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                       cv2.THRESH_BINARY, 11, 2)    
     
+    # 4. Convertir de vuelta a 3 canales para YOLO
+    final_processed_image = cv2.cvtColor(binary_image, cv2.COLOR_GRAY2BGR)
 
     return final_processed_image
 

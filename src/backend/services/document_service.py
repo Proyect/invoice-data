@@ -68,6 +68,24 @@ def update_document_status(
         db.refresh(db_document)
     return db_document
 
+def delete_document(db: Session, document_id: uuid.UUID) -> bool:
+    """
+    Elimina un documento de la base de datos.
+    Retorna True si se eliminó exitosamente, False si no se encontró.
+    """
+    db_document = db.query(Document).filter(Document.id == document_id).first()
+    if db_document:
+        db.delete(db_document)
+        db.commit()
+        return True
+    return False
+
+def get_documents_by_user(db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
+    """
+    Obtiene todos los documentos de un usuario con paginación.
+    """
+    return db.query(Document).filter(Document.user_id == user_id).offset(skip).limit(limit).all()
+
 # Aquí irán las funciones para guardar datos específicos de DNI o facturas
 # def save_extracted_dni_data(db: Session, document_id: uuid.UUID, extracted_data: dict):
 #     # Implementar la lógica para guardar en ExtractedDniData

@@ -1,16 +1,18 @@
 # ocr_api/api/v1/documents.py
 
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status, Query
+from fastapi.responses import FileResponse
 from typing import Annotated
 import uuid
 import logging
+import os
 from sqlalchemy.orm import Session
 
 from models.documents import DocumentUploadResponse, DocumentStatusResponse, DocumentType
 from models.auth import User as UserModel
 from services.auth_service import get_current_active_user
 from services.document_service import create_document_entry, get_document_by_id, delete_document, get_documents_by_user
-from services.storage.local_storage import upload_file_local
+from services.storage.local_storage import upload_file_local, download_file_local, LOCAL_STORAGE_PATH
 from services.task_queue_service import add_ocr_task
 from services.sync_ocr_service import process_document_sync, is_redis_available
 from database import get_db
@@ -292,3 +294,42 @@ async def get_structured_data(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No structured data available.")
     
     return raw_data['structured_data']
+
+@router.get("/{document_id}/download", summary="Descargar un documento")
+async def download_document(
+    document_id: uuid.UUID,
+    current_user: Annotated[UserModel, Depends(get_current_active_user)],
+    db: Annotated[Session, Depends(get_db)]
+):
+    """
+    Descarga el archivo original de un documento.
+    """
+    db_document = get_document_by_id(db, document_id)
+    if not db_document:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found.")
+    
+    # Verificar que el documento pertenece al usuario actual
+    if db_document.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied to this document.")
+    
+    try:
+        # Construir la ruta completa del archivo
+        file_path = os.path.join(LOCAL_STORAGE_PATH, db_document.storage_path)
+        
+        # Verificar que el archivo existe
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found on server.")
+        
+        # Retornar el archivo como respuesta
+        return FileResponse(
+            path=file_path,
+            filename=db_document.original_filename,
+            media_type='application/octet-stream'
+        )
+        
+    except Exception as e:
+        logger.error(f"Error downloading document {document_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error downloading file"
+        )

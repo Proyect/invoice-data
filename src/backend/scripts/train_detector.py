@@ -6,7 +6,8 @@ Uso: python train_detector.py --type invoice --epochs 100
 
 import argparse
 import os
-import sys
+import json
+from datetime import datetime
 import torch
 from pathlib import Path
 from ultralytics import YOLO
@@ -82,6 +83,56 @@ def create_dataset_config(doc_type):
     print(f"✓ Configuración creada: {config_path}")
     return config_path
 
+def validate_dataset_structure(config_path: str) -> dict:
+    """Valida estructura del dataset y cuenta imágenes/labels por split.
+    Devuelve un dict con conteos y lista de faltantes.
+    """
+    report = {
+        'splits': {},
+        'missing_labels': [],
+        'missing_images': []
+    }
+
+    with open(config_path, 'r') as f:
+        cfg = yaml.safe_load(f)
+
+    base = Path(cfg['path'])
+    for split in ['train', 'val', 'test']:
+        img_dir = base / cfg.get(split, f'images/{split}')
+        lbl_dir = base / 'labels' / split
+
+        imgs = list(img_dir.glob('*.jpg')) + list(img_dir.glob('*.jpeg')) + list(img_dir.glob('*.png'))
+        lbls = list(lbl_dir.glob('*.txt'))
+
+        report['splits'][split] = {
+            'images': len(imgs),
+            'labels': len(lbls),
+            'image_dir': str(img_dir),
+            'label_dir': str(lbl_dir)
+        }
+
+        img_stems = {p.stem for p in imgs}
+        lbl_stems = {p.stem for p in lbls}
+
+        # Falta label por imagen
+        for stem in sorted(img_stems - lbl_stems):
+            report['missing_labels'].append(f"{split}:{stem}")
+
+        # Falta imagen por label
+        for stem in sorted(lbl_stems - img_stems):
+            report['missing_images'].append(f"{split}:{stem}")
+
+    # Mensajes de diagnóstico
+    print("\n🧪 Validación del dataset:")
+    for split, data in report['splits'].items():
+        print(f"  - {split}: {data['images']} imágenes, {data['labels']} labels")
+    if report['missing_labels']:
+        print(f"⚠️  Labels faltantes: {len(report['missing_labels'])} (ej.: {report['missing_labels'][:5]})")
+    if report['missing_images']:
+        print(f"⚠️  Imágenes faltantes: {len(report['missing_images'])} (ej.: {report['missing_images'][:5]})")
+
+    return report
+
 def download_pretrained_model(model_size='n'):
     """Descarga modelo preentrenado de YOLOv8"""
     model_name = f'yolov8{model_size}.pt'
@@ -89,7 +140,7 @@ def download_pretrained_model(model_size='n'):
     
     if not os.path.exists(model_path):
         print(f"Descargando modelo preentrenado: {model_name}")
-        model = YOLO(model_name)  # Esto descarga automáticamente
+        _ = YOLO(model_name)  # Esto descarga automáticamente
         os.makedirs('models/pretrained', exist_ok=True)
         # El modelo se guarda automáticamente en el directorio actual
         if os.path.exists(model_name):
@@ -97,25 +148,31 @@ def download_pretrained_model(model_size='n'):
     
     return model_path
 
-def train_model(doc_type, epochs=100, batch_size=16, img_size=640, model_size='n'):
+def train_model(doc_type, epochs=100, batch_size=16, img_size=640, model_size='n', device: str = None, workers: int = 4, resume_weights: str = None):
     """Entrena el modelo YOLO"""
     
     print(f"\n🚀 Iniciando entrenamiento para {doc_type}")
-    print(f"Configuración:")
+    print("Configuración:")
     print(f"  - Epochs: {epochs}")
     print(f"  - Batch size: {batch_size}")
     print(f"  - Image size: {img_size}")
     print(f"  - Model size: {model_size}")
     
-    # Verificar GPU
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f"  - Device: {device}")
+    # Verificar dispositivo
+    auto_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = device or auto_device
+    print(f"  - Device: {device} (auto: {auto_device})")
     
     # Crear configuración del dataset
     config_path = create_dataset_config(doc_type)
     
-    # Descargar modelo preentrenado
-    pretrained_path = download_pretrained_model(model_size)
+    # Seleccionar pesos (resume o preentrenado)
+    pretrained_path = None
+    if resume_weights and os.path.exists(resume_weights):
+        print(f"🔁 Reanudando desde pesos: {resume_weights}")
+        pretrained_path = resume_weights
+    else:
+        pretrained_path = download_pretrained_model(model_size)
     
     # Verificar que existen imágenes de entrenamiento
     train_dir = f'datasets/{doc_type}/images/train'
@@ -134,6 +191,7 @@ def train_model(doc_type, epochs=100, batch_size=16, img_size=640, model_size='n
         'imgsz': img_size,
         'batch': batch_size,
         'device': device,
+        'workers': workers,
         'project': 'models/trained',
         'name': f'{doc_type}_detector',
         'save_period': max(10, epochs // 10),
@@ -161,12 +219,18 @@ def train_model(doc_type, epochs=100, batch_size=16, img_size=640, model_size='n
         'mixup': 0.1
     }
     
-    print(f"\n📊 Iniciando entrenamiento...")
+    print("\n📊 Iniciando entrenamiento...")
     
     try:
+        # Validar dataset antes de entrenar
+        ds_report = validate_dataset_structure(config_path)
+        if ds_report['splits']['train']['images'] == 0:
+            print("❌ No hay imágenes de entrenamiento. Agrega datos en images/train")
+            return None
+
         results = model.train(**training_args)
         
-        print(f"\n✅ Entrenamiento completado!")
+        print("\n✅ Entrenamiento completado!")
         print(f"Modelo guardado en: models/trained/{doc_type}_detector/weights/best.pt")
         
         # Copiar modelo entrenado a la ubicación final
@@ -179,6 +243,29 @@ def train_model(doc_type, epochs=100, batch_size=16, img_size=640, model_size='n
             shutil.copy(best_model_path, final_model_path)
             print(f"✅ Modelo copiado a: {final_model_path}")
         
+        # Guardar resumen de resultados
+        summary = {
+            'doc_type': doc_type,
+            'epochs': epochs,
+            'batch_size': batch_size,
+            'img_size': img_size,
+            'device': device,
+            'workers': workers,
+            'pretrained_or_resume': pretrained_path,
+            'trained_best_path': best_model_path,
+            'final_model_path': final_model_path,
+            'timestamp': datetime.utcnow().isoformat() + 'Z'
+        }
+        try:
+            if hasattr(results, 'results_dict') and isinstance(results.results_dict, dict):
+                summary['metrics'] = results.results_dict
+        except Exception:
+            pass
+
+        os.makedirs('models/trained', exist_ok=True)
+        with open(f'models/trained/{doc_type}_detector/results_summary.json', 'w') as f:
+            json.dump(summary, f, indent=2)
+
         return results
         
     except Exception as e:
@@ -222,6 +309,12 @@ def main():
                        help='Tamaño de imagen (default: 640)')
     parser.add_argument('--model', choices=['n', 's', 'm', 'l', 'x'], default='n',
                        help='Tamaño del modelo YOLOv8 (default: n)')
+    parser.add_argument('--device', choices=['cpu', 'cuda'], default=None,
+                       help='Dispositivo de entrenamiento (default: auto)')
+    parser.add_argument('--workers', type=int, default=4,
+                       help='Número de workers para dataloader (default: 4)')
+    parser.add_argument('--resume', type=str, default=None,
+                       help='Ruta a pesos .pt para reanudar entrenamiento')
     parser.add_argument('--setup', action='store_true',
                        help='Solo crear estructura de directorios')
     parser.add_argument('--validate', type=str,
@@ -250,7 +343,10 @@ def main():
         epochs=args.epochs,
         batch_size=args.batch,
         img_size=args.imgsz,
-        model_size=args.model
+        model_size=args.model,
+        device=args.device,
+        workers=args.workers,
+        resume_weights=args.resume
     )
     
     if results:

@@ -1,84 +1,71 @@
 # ocr_api/services/task_queue_service.py
 
-import redis
-from rq import Queue
-from config import REDIS_HOST, REDIS_PORT, REDIS_DB
+import logging
 
-# Configurar conexión a Redis
-redis_conn = redis.Redis(
-    host=REDIS_HOST,
-    port=REDIS_PORT,
-    db=REDIS_DB,
-    decode_responses=True
-)
-
-# Crear cola de tareas
-ocr_queue = Queue('ocr_tasks', connection=redis_conn)
+logger = logging.getLogger(__name__)
 
 async def add_ocr_task(document_id: str):
     """
-    Añade una tarea de procesamiento OCR a la cola.
+    Encola una tarea OCR para procesamiento asíncrono usando Celery.
     
     Args:
         document_id: ID del documento a procesar
         
     Returns:
-        Job ID de la tarea encolada
+        Task ID de Celery
     """
     try:
-        # Importar aquí para evitar dependencias circulares
-        from workers.ocr_worker import process_document_for_ocr
+        from ocr_worker.celery_app import celery_app
         
-        # Encolar la tarea
-        job = ocr_queue.enqueue(
-            process_document_for_ocr,
-            args=[document_id],
-            job_timeout='10m',  # Timeout de 10 minutos
-            result_ttl=3600,    # Mantener resultado por 1 hora
-            failure_ttl=3600    # Mantener fallos por 1 hora
-        )
+        logger.info(f"Encolando tarea OCR para documento: {document_id}")
         
-        print(f"Tarea OCR encolada para documento {document_id} con Job ID: {job.id}")
-        return job.id
+        # Encolar la tarea usando send_task (por nombre)
+        task = celery_app.send_task('ocr_tasks.process_document_task', args=[document_id])
+        
+        logger.info(f"Tarea OCR encolada para documento {document_id} con Task ID: {task.id}")
+        return task.id
         
     except Exception as e:
-        print(f"Error al encolar tarea OCR para documento {document_id}: {e}")
+        logger.error(f"Error al encolar tarea OCR para documento {document_id}: {e}")
         raise
 
-def get_job_status(job_id: str):
+def get_task_status(task_id: str):
     """
-    Obtiene el estado de una tarea en la cola.
+    Obtiene el estado de una tarea de Celery.
     
     Args:
-        job_id: ID de la tarea
+        task_id: ID de la tarea
         
     Returns:
-        Estado de la tarea (queued, started, finished, failed)
+        Estado de la tarea (PENDING, STARTED, SUCCESS, FAILURE, etc.)
     """
     try:
-        job = ocr_queue.fetch_job(job_id)
-        if job is None:
-            return "not_found"
-        return job.get_status()
+        from ocr_worker.celery_app import celery_app
+        result = celery_app.AsyncResult(task_id)
+        return result.status
     except Exception as e:
-        print(f"Error al obtener estado de tarea {job_id}: {e}")
-        return "error"
+        logger.error(f"Error al obtener estado de tarea {task_id}: {e}")
+        return "ERROR"
 
 def get_queue_info():
     """
-    Obtiene información sobre la cola de tareas.
+    Obtiene información sobre las colas de Celery.
     
     Returns:
-        Diccionario con información de la cola
+        Diccionario con información de las colas
     """
     try:
+        from ocr_worker.celery_app import celery_app
+        inspect = celery_app.control.inspect()
+        active = inspect.active()
+        scheduled = inspect.scheduled()
+        reserved = inspect.reserved()
+        
         return {
-            "queue_name": ocr_queue.name,
-            "jobs_in_queue": len(ocr_queue),
-            "failed_jobs": len(ocr_queue.failed_job_registry),
-            "started_jobs": len(ocr_queue.started_job_registry),
-            "deferred_jobs": len(ocr_queue.deferred_job_registry)
+            "active_tasks": active,
+            "scheduled_tasks": scheduled,
+            "reserved_tasks": reserved
         }
     except Exception as e:
-        print(f"Error al obtener información de la cola: {e}")
+        logger.error(f"Error al obtener información de la cola: {e}")
         return {"error": str(e)}

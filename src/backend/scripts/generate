@@ -1,0 +1,1634 @@
+[
+  {
+    "tipo_factura": "A",
+    "numero_factura": "5977-25920232",
+    "fecha_emision": "19/06/2025",
+    "fecha_vencimiento": "14/07/2025",
+    "cuit_emisor": "25-63203345-3",
+    "razon_social_emisor": "Lopez, Moreno and Molina",
+    "cuit_receptor": "25-92593768-3",
+    "razon_social_receptor": "Campos and Sons",
+    "items": [
+      {
+        "descripcion": "Triple-buffered uniform flexibility",
+        "cantidad": 1,
+        "precio_unitario": 2783.02,
+        "total": 2783.02
+      }
+    ],
+    "subtotal": 2783.02,
+    "iva": 584.43,
+    "total": 3367.45
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "1302-72538486",
+    "fecha_emision": "12/08/2025",
+    "fecha_vencimiento": "11/09/2025",
+    "cuit_emisor": "24-84148080-7",
+    "razon_social_emisor": "Garcia-Guzman",
+    "cuit_receptor": "29-88355566-6",
+    "razon_social_receptor": "Soria-Rodriguez",
+    "items": [
+      {
+        "descripcion": "Organic regional time-frame",
+        "cantidad": 9,
+        "precio_unitario": 438.66,
+        "total": 3947.94
+      },
+      {
+        "descripcion": "Devolved full-range capacity",
+        "cantidad": 6,
+        "precio_unitario": 2530.82,
+        "total": 15184.920000000002
+      }
+    ],
+    "subtotal": 19132.86,
+    "iva": 4017.9,
+    "total": 23150.760000000002
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "3097-93532581",
+    "fecha_emision": "12/05/2025",
+    "fecha_vencimiento": "12/06/2025",
+    "cuit_emisor": "29-40128769-4",
+    "razon_social_emisor": "Gomez, Vargas and Ortiz",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Extended national forecast",
+        "cantidad": 1,
+        "precio_unitario": 3543.73,
+        "total": 3543.73
+      },
+      {
+        "descripcion": "Integrated attitude-oriented initiative",
+        "cantidad": 8,
+        "precio_unitario": 1298.59,
+        "total": 10388.72
+      }
+    ],
+    "subtotal": 13932.449999999999,
+    "iva": 2925.81,
+    "total": 16858.26
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "7991-21617126",
+    "fecha_emision": "06/09/2025",
+    "fecha_vencimiento": "05/10/2025",
+    "cuit_emisor": "30-84199640-9",
+    "razon_social_emisor": "Garcia, Aguirre and Diaz",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Enterprise-wide optimizing throughput",
+        "cantidad": 3,
+        "precio_unitario": 4066.5,
+        "total": 12199.5
+      },
+      {
+        "descripcion": "Expanded even-keeled service-desk",
+        "cantidad": 9,
+        "precio_unitario": 4102.73,
+        "total": 36924.56999999999
+      },
+      {
+        "descripcion": "Ergonomic scalable matrices",
+        "cantidad": 1,
+        "precio_unitario": 2046.51,
+        "total": 2046.51
+      },
+      {
+        "descripcion": "Balanced radical protocol",
+        "cantidad": 2,
+        "precio_unitario": 425.0,
+        "total": 850.0
+      }
+    ],
+    "subtotal": 52020.579999999994,
+    "iva": 10924.32,
+    "total": 62944.899999999994
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "8641-37543217",
+    "fecha_emision": "17/09/2024",
+    "fecha_vencimiento": "24/10/2024",
+    "cuit_emisor": "24-89154319-4",
+    "razon_social_emisor": "Ramirez Inc",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Public-key even-keeled frame",
+        "cantidad": 4,
+        "precio_unitario": 1760.89,
+        "total": 7043.56
+      },
+      {
+        "descripcion": "Programmable actuating product",
+        "cantidad": 6,
+        "precio_unitario": 2707.43,
+        "total": 16244.579999999998
+      },
+      {
+        "descripcion": "Right-sized fresh-thinking application",
+        "cantidad": 3,
+        "precio_unitario": 1757.85,
+        "total": 5273.549999999999
+      },
+      {
+        "descripcion": "Persistent mobile portal",
+        "cantidad": 6,
+        "precio_unitario": 4534.03,
+        "total": 27204.18
+      },
+      {
+        "descripcion": "Polarized leadingedge solution",
+        "cantidad": 7,
+        "precio_unitario": 1895.56,
+        "total": 13268.92
+      }
+    ],
+    "subtotal": 69034.79,
+    "iva": 14497.31,
+    "total": 83532.09999999999
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "2550-39341057",
+    "fecha_emision": "27/12/2024",
+    "fecha_vencimiento": "01/02/2025",
+    "cuit_emisor": "21-36907266-0",
+    "razon_social_emisor": "Escobar PLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Adaptive disintermediate challenge",
+        "cantidad": 9,
+        "precio_unitario": 4437.11,
+        "total": 39933.99
+      }
+    ],
+    "subtotal": 39933.99,
+    "iva": 8386.14,
+    "total": 48320.13
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "9182-01102161",
+    "fecha_emision": "17/09/2024",
+    "fecha_vencimiento": "19/10/2024",
+    "cuit_emisor": "27-99522682-8",
+    "razon_social_emisor": "Sosa LLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Optimized value-added portal",
+        "cantidad": 9,
+        "precio_unitario": 4011.94,
+        "total": 36107.46
+      },
+      {
+        "descripcion": "Implemented human-resource function",
+        "cantidad": 6,
+        "precio_unitario": 662.11,
+        "total": 3972.66
+      },
+      {
+        "descripcion": "Multi-tiered uniform conglomeration",
+        "cantidad": 7,
+        "precio_unitario": 1115.56,
+        "total": 7808.92
+      }
+    ],
+    "subtotal": 47889.03999999999,
+    "iva": 10056.7,
+    "total": 57945.73999999999
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "2755-29448344",
+    "fecha_emision": "10/01/2025",
+    "fecha_vencimiento": "15/02/2025",
+    "cuit_emisor": "27-33905364-1",
+    "razon_social_emisor": "Caceres, Figueroa and Rodriguez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Centralized coherent firmware",
+        "cantidad": 7,
+        "precio_unitario": 4906.89,
+        "total": 34348.23
+      }
+    ],
+    "subtotal": 34348.23,
+    "iva": 7213.13,
+    "total": 41561.36
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "0309-66259207",
+    "fecha_emision": "15/12/2024",
+    "fecha_vencimiento": "28/01/2025",
+    "cuit_emisor": "29-60477084-1",
+    "razon_social_emisor": "Sanchez PLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Polarized modular functionalities",
+        "cantidad": 7,
+        "precio_unitario": 1100.16,
+        "total": 7701.120000000001
+      },
+      {
+        "descripcion": "Innovative full-range product",
+        "cantidad": 6,
+        "precio_unitario": 1613.71,
+        "total": 9682.26
+      },
+      {
+        "descripcion": "Configurable user-facing standardization",
+        "cantidad": 10,
+        "precio_unitario": 1785.57,
+        "total": 17855.7
+      }
+    ],
+    "subtotal": 35239.08,
+    "iva": 7400.21,
+    "total": 42639.29
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "1204-06750363",
+    "fecha_emision": "25/10/2024",
+    "fecha_vencimiento": "02/12/2024",
+    "cuit_emisor": "24-59684165-3",
+    "razon_social_emisor": "Benitez-Perez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Robust needs-based open architecture",
+        "cantidad": 6,
+        "precio_unitario": 1504.31,
+        "total": 9025.86
+      }
+    ],
+    "subtotal": 9025.86,
+    "iva": 1895.43,
+    "total": 10921.29
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "4049-93182932",
+    "fecha_emision": "22/04/2025",
+    "fecha_vencimiento": "10/06/2025",
+    "cuit_emisor": "20-65946892-5",
+    "razon_social_emisor": "Carrizo Inc",
+    "cuit_receptor": "27-26800255-5",
+    "razon_social_receptor": "Alvarez Group",
+    "items": [
+      {
+        "descripcion": "User-centric reciprocal installation",
+        "cantidad": 7,
+        "precio_unitario": 3089.64,
+        "total": 21627.48
+      },
+      {
+        "descripcion": "Horizontal transitional application",
+        "cantidad": 7,
+        "precio_unitario": 1083.99,
+        "total": 7587.93
+      },
+      {
+        "descripcion": "Re-engineered modular task-force",
+        "cantidad": 1,
+        "precio_unitario": 4481.93,
+        "total": 4481.93
+      },
+      {
+        "descripcion": "Object-based 3rdgeneration adapter",
+        "cantidad": 1,
+        "precio_unitario": 4263.88,
+        "total": 4263.88
+      },
+      {
+        "descripcion": "Enterprise-wide heuristic frame",
+        "cantidad": 2,
+        "precio_unitario": 4901.27,
+        "total": 9802.54
+      }
+    ],
+    "subtotal": 47763.759999999995,
+    "iva": 10030.39,
+    "total": 57794.149999999994
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "2119-19140817",
+    "fecha_emision": "03/07/2025",
+    "fecha_vencimiento": "01/09/2025",
+    "cuit_emisor": "24-38553498-1",
+    "razon_social_emisor": "Fernandez, Miranda and Soria",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Customizable fresh-thinking hardware",
+        "cantidad": 7,
+        "precio_unitario": 470.46,
+        "total": 3293.22
+      },
+      {
+        "descripcion": "Up-sized zero administration middleware",
+        "cantidad": 9,
+        "precio_unitario": 2631.36,
+        "total": 23682.24
+      },
+      {
+        "descripcion": "Managed even-keeled project",
+        "cantidad": 9,
+        "precio_unitario": 4285.17,
+        "total": 38566.53
+      },
+      {
+        "descripcion": "Ameliorated background conglomeration",
+        "cantidad": 2,
+        "precio_unitario": 1718.3,
+        "total": 3436.6
+      }
+    ],
+    "subtotal": 68978.59000000001,
+    "iva": 14485.5,
+    "total": 83464.09000000001
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "2376-08605454",
+    "fecha_emision": "14/10/2024",
+    "fecha_vencimiento": "11/11/2024",
+    "cuit_emisor": "23-80570273-2",
+    "razon_social_emisor": "Vera-Gomez",
+    "cuit_receptor": "28-44254916-2",
+    "razon_social_receptor": "Rios-Rodriguez",
+    "items": [
+      {
+        "descripcion": "Balanced didactic concept",
+        "cantidad": 5,
+        "precio_unitario": 3597.64,
+        "total": 17988.2
+      },
+      {
+        "descripcion": "Multi-channeled real-time approach",
+        "cantidad": 6,
+        "precio_unitario": 1617.98,
+        "total": 9707.880000000001
+      },
+      {
+        "descripcion": "Innovative responsive ability",
+        "cantidad": 8,
+        "precio_unitario": 4192.68,
+        "total": 33541.44
+      }
+    ],
+    "subtotal": 61237.520000000004,
+    "iva": 12859.88,
+    "total": 74097.40000000001
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "3102-26429994",
+    "fecha_emision": "30/09/2024",
+    "fecha_vencimiento": "17/10/2024",
+    "cuit_emisor": "26-98621457-1",
+    "razon_social_emisor": "Ponce, Fernandez and Godoy",
+    "cuit_receptor": "29-21965517-0",
+    "razon_social_receptor": "Lucero LLC",
+    "items": [
+      {
+        "descripcion": "Multi-layered zero tolerance project",
+        "cantidad": 8,
+        "precio_unitario": 4090.68,
+        "total": 32725.44
+      }
+    ],
+    "subtotal": 32725.44,
+    "iva": 6872.34,
+    "total": 39597.78
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "3388-28218486",
+    "fecha_emision": "15/09/2024",
+    "fecha_vencimiento": "09/10/2024",
+    "cuit_emisor": "24-10834040-7",
+    "razon_social_emisor": "Fernandez, Gonzalez and Alvarez",
+    "cuit_receptor": "24-68687588-9",
+    "razon_social_receptor": "Paz Inc",
+    "items": [
+      {
+        "descripcion": "Fundamental upward-trending process improvement",
+        "cantidad": 3,
+        "precio_unitario": 956.0,
+        "total": 2868.0
+      },
+      {
+        "descripcion": "Persevering stable initiative",
+        "cantidad": 6,
+        "precio_unitario": 4055.52,
+        "total": 24333.12
+      },
+      {
+        "descripcion": "Integrated zero tolerance instruction set",
+        "cantidad": 8,
+        "precio_unitario": 4913.86,
+        "total": 39310.88
+      }
+    ],
+    "subtotal": 66512.0,
+    "iva": 13967.52,
+    "total": 80479.52
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "4392-36379798",
+    "fecha_emision": "15/05/2025",
+    "fecha_vencimiento": "31/05/2025",
+    "cuit_emisor": "26-48934989-7",
+    "razon_social_emisor": "Ferreyra, Cruz and Romero",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Virtual executive benchmark",
+        "cantidad": 3,
+        "precio_unitario": 4879.05,
+        "total": 14637.150000000001
+      }
+    ],
+    "subtotal": 14637.150000000001,
+    "iva": 3073.8,
+    "total": 17710.95
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "0422-06152741",
+    "fecha_emision": "01/03/2025",
+    "fecha_vencimiento": "29/04/2025",
+    "cuit_emisor": "20-33640388-5",
+    "razon_social_emisor": "Silva-Valdez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Diverse systemic paradigm",
+        "cantidad": 7,
+        "precio_unitario": 1121.53,
+        "total": 7850.71
+      },
+      {
+        "descripcion": "Re-engineered fresh-thinking hardware",
+        "cantidad": 4,
+        "precio_unitario": 4266.77,
+        "total": 17067.08
+      }
+    ],
+    "subtotal": 24917.79,
+    "iva": 5232.74,
+    "total": 30150.53
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "9627-12708318",
+    "fecha_emision": "05/05/2025",
+    "fecha_vencimiento": "29/06/2025",
+    "cuit_emisor": "20-12893012-6",
+    "razon_social_emisor": "Sosa, Morales and Gomez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Open-architected reciprocal Local Area Network",
+        "cantidad": 1,
+        "precio_unitario": 4713.17,
+        "total": 4713.17
+      },
+      {
+        "descripcion": "Profit-focused attitude-oriented moratorium",
+        "cantidad": 5,
+        "precio_unitario": 1259.16,
+        "total": 6295.8
+      },
+      {
+        "descripcion": "Total local info-mediaries",
+        "cantidad": 5,
+        "precio_unitario": 390.12,
+        "total": 1950.6
+      },
+      {
+        "descripcion": "Balanced leadingedge installation",
+        "cantidad": 8,
+        "precio_unitario": 3366.08,
+        "total": 26928.64
+      }
+    ],
+    "subtotal": 39888.21,
+    "iva": 8376.52,
+    "total": 48264.729999999996
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "1270-37956812",
+    "fecha_emision": "30/07/2025",
+    "fecha_vencimiento": "26/08/2025",
+    "cuit_emisor": "26-85207963-7",
+    "razon_social_emisor": "Fernandez-Fernandez",
+    "cuit_receptor": "21-14306303-8",
+    "razon_social_receptor": "Ponce and Sons",
+    "items": [
+      {
+        "descripcion": "Proactive disintermediate task-force",
+        "cantidad": 4,
+        "precio_unitario": 584.34,
+        "total": 2337.36
+      },
+      {
+        "descripcion": "Persevering modular matrix",
+        "cantidad": 4,
+        "precio_unitario": 2750.26,
+        "total": 11001.04
+      },
+      {
+        "descripcion": "Synergized disintermediate toolset",
+        "cantidad": 10,
+        "precio_unitario": 909.81,
+        "total": 9098.099999999999
+      },
+      {
+        "descripcion": "Virtual 24/7 intranet",
+        "cantidad": 6,
+        "precio_unitario": 4954.36,
+        "total": 29726.159999999996
+      }
+    ],
+    "subtotal": 52162.659999999996,
+    "iva": 10954.16,
+    "total": 63116.81999999999
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "8236-78751992",
+    "fecha_emision": "15/11/2024",
+    "fecha_vencimiento": "04/12/2024",
+    "cuit_emisor": "25-91963245-7",
+    "razon_social_emisor": "Ponce LLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Persevering client-driven standardization",
+        "cantidad": 3,
+        "precio_unitario": 1278.83,
+        "total": 3836.49
+      },
+      {
+        "descripcion": "Grass-roots global open architecture",
+        "cantidad": 10,
+        "precio_unitario": 4151.59,
+        "total": 41515.9
+      },
+      {
+        "descripcion": "Reduced regional complexity",
+        "cantidad": 7,
+        "precio_unitario": 4346.5,
+        "total": 30425.5
+      },
+      {
+        "descripcion": "Multi-tiered regional knowledgebase",
+        "cantidad": 1,
+        "precio_unitario": 1923.6,
+        "total": 1923.6
+      },
+      {
+        "descripcion": "Re-engineered multi-tasking moderator",
+        "cantidad": 7,
+        "precio_unitario": 3993.73,
+        "total": 27956.11
+      }
+    ],
+    "subtotal": 105657.6,
+    "iva": 22188.1,
+    "total": 127845.70000000001
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "1079-60884540",
+    "fecha_emision": "04/01/2025",
+    "fecha_vencimiento": "10/02/2025",
+    "cuit_emisor": "26-66921036-5",
+    "razon_social_emisor": "Castro Inc",
+    "cuit_receptor": "21-25800350-5",
+    "razon_social_receptor": "Peralta, Lopez and Ramirez",
+    "items": [
+      {
+        "descripcion": "Multi-channeled bi-directional open architecture",
+        "cantidad": 9,
+        "precio_unitario": 3749.4,
+        "total": 33744.6
+      }
+    ],
+    "subtotal": 33744.6,
+    "iva": 7086.37,
+    "total": 40830.97
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "7867-16082678",
+    "fecha_emision": "07/06/2025",
+    "fecha_vencimiento": "09/07/2025",
+    "cuit_emisor": "27-48518953-0",
+    "razon_social_emisor": "Mendez Group",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Upgradable systemic benchmark",
+        "cantidad": 10,
+        "precio_unitario": 3596.73,
+        "total": 35967.3
+      },
+      {
+        "descripcion": "Persistent asymmetric open system",
+        "cantidad": 3,
+        "precio_unitario": 3519.02,
+        "total": 10557.06
+      },
+      {
+        "descripcion": "Phased fault-tolerant Graphic Interface",
+        "cantidad": 6,
+        "precio_unitario": 3536.83,
+        "total": 21220.98
+      },
+      {
+        "descripcion": "Versatile attitude-oriented throughput",
+        "cantidad": 10,
+        "precio_unitario": 1377.93,
+        "total": 13779.300000000001
+      }
+    ],
+    "subtotal": 81524.64,
+    "iva": 17120.17,
+    "total": 98644.81
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "2919-37920812",
+    "fecha_emision": "02/06/2025",
+    "fecha_vencimiento": "30/07/2025",
+    "cuit_emisor": "30-98785863-2",
+    "razon_social_emisor": "Rodriguez, Gonzalez and Villalba",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Operative next generation system engine",
+        "cantidad": 9,
+        "precio_unitario": 2129.66,
+        "total": 19166.94
+      },
+      {
+        "descripcion": "Reactive national workforce",
+        "cantidad": 4,
+        "precio_unitario": 3360.08,
+        "total": 13440.32
+      }
+    ],
+    "subtotal": 32607.26,
+    "iva": 6847.52,
+    "total": 39454.78
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "8727-71400749",
+    "fecha_emision": "10/02/2025",
+    "fecha_vencimiento": "18/03/2025",
+    "cuit_emisor": "29-99994273-3",
+    "razon_social_emisor": "Cruz-Rodriguez",
+    "cuit_receptor": "23-48183668-7",
+    "razon_social_receptor": "Romero, Perez and Muñoz",
+    "items": [
+      {
+        "descripcion": "Quality-focused client-server array",
+        "cantidad": 8,
+        "precio_unitario": 3489.66,
+        "total": 27917.28
+      },
+      {
+        "descripcion": "Enhanced 3rdgeneration intranet",
+        "cantidad": 6,
+        "precio_unitario": 4392.43,
+        "total": 26354.58
+      },
+      {
+        "descripcion": "Operative upward-trending structure",
+        "cantidad": 2,
+        "precio_unitario": 1592.79,
+        "total": 3185.58
+      },
+      {
+        "descripcion": "Phased intangible moratorium",
+        "cantidad": 7,
+        "precio_unitario": 1873.49,
+        "total": 13114.43
+      },
+      {
+        "descripcion": "Reactive 4thgeneration analyzer",
+        "cantidad": 3,
+        "precio_unitario": 3082.07,
+        "total": 9246.210000000001
+      }
+    ],
+    "subtotal": 79818.08,
+    "iva": 16761.8,
+    "total": 96579.88
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "9900-28199996",
+    "fecha_emision": "12/06/2025",
+    "fecha_vencimiento": "03/08/2025",
+    "cuit_emisor": "22-17306706-3",
+    "razon_social_emisor": "Muñoz-Moreno",
+    "cuit_receptor": "20-84709220-8",
+    "razon_social_receptor": "Ojeda-Flores",
+    "items": [
+      {
+        "descripcion": "Optimized web-enabled hierarchy",
+        "cantidad": 1,
+        "precio_unitario": 2346.34,
+        "total": 2346.34
+      }
+    ],
+    "subtotal": 2346.34,
+    "iva": 492.73,
+    "total": 2839.07
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "4294-11116731",
+    "fecha_emision": "15/09/2024",
+    "fecha_vencimiento": "03/10/2024",
+    "cuit_emisor": "21-87139908-2",
+    "razon_social_emisor": "Herrera, Ferreyra and Leiva",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Function-based multi-state collaboration",
+        "cantidad": 8,
+        "precio_unitario": 654.45,
+        "total": 5235.6
+      },
+      {
+        "descripcion": "Vision-oriented bottom-line architecture",
+        "cantidad": 2,
+        "precio_unitario": 3061.24,
+        "total": 6122.48
+      },
+      {
+        "descripcion": "Enterprise-wide multi-tasking encoding",
+        "cantidad": 7,
+        "precio_unitario": 754.14,
+        "total": 5278.98
+      },
+      {
+        "descripcion": "Distributed stable policy",
+        "cantidad": 1,
+        "precio_unitario": 803.12,
+        "total": 803.12
+      },
+      {
+        "descripcion": "Self-enabling radical alliance",
+        "cantidad": 7,
+        "precio_unitario": 3571.15,
+        "total": 24998.05
+      }
+    ],
+    "subtotal": 42438.229999999996,
+    "iva": 8912.03,
+    "total": 51350.259999999995
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "8998-96601841",
+    "fecha_emision": "27/11/2024",
+    "fecha_vencimiento": "09/01/2025",
+    "cuit_emisor": "21-30160119-1",
+    "razon_social_emisor": "Lopez and Sons",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Ameliorated user-facing protocol",
+        "cantidad": 8,
+        "precio_unitario": 547.82,
+        "total": 4382.56
+      }
+    ],
+    "subtotal": 4382.56,
+    "iva": 920.34,
+    "total": 5302.900000000001
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "5487-25213623",
+    "fecha_emision": "01/10/2024",
+    "fecha_vencimiento": "21/11/2024",
+    "cuit_emisor": "23-90557716-9",
+    "razon_social_emisor": "Suarez Group",
+    "cuit_receptor": "30-67453867-4",
+    "razon_social_receptor": "Perez, Fernandez and Flores",
+    "items": [
+      {
+        "descripcion": "Cross-platform coherent open system",
+        "cantidad": 5,
+        "precio_unitario": 2173.98,
+        "total": 10869.9
+      },
+      {
+        "descripcion": "Grass-roots solution-oriented encoding",
+        "cantidad": 7,
+        "precio_unitario": 4388.58,
+        "total": 30720.059999999998
+      },
+      {
+        "descripcion": "Realigned optimizing adapter",
+        "cantidad": 7,
+        "precio_unitario": 748.55,
+        "total": 5239.849999999999
+      },
+      {
+        "descripcion": "Universal systematic forecast",
+        "cantidad": 1,
+        "precio_unitario": 3808.14,
+        "total": 3808.14
+      },
+      {
+        "descripcion": "Integrated client-server concept",
+        "cantidad": 5,
+        "precio_unitario": 4412.32,
+        "total": 22061.6
+      }
+    ],
+    "subtotal": 72699.54999999999,
+    "iva": 15266.91,
+    "total": 87966.45999999999
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "3896-81293207",
+    "fecha_emision": "16/05/2025",
+    "fecha_vencimiento": "06/07/2025",
+    "cuit_emisor": "27-92008411-8",
+    "razon_social_emisor": "Godoy Ltd",
+    "cuit_receptor": "22-36173829-3",
+    "razon_social_receptor": "Mendoza, Guzman and Rodriguez",
+    "items": [
+      {
+        "descripcion": "Visionary leadingedge standardization",
+        "cantidad": 9,
+        "precio_unitario": 2620.4,
+        "total": 23583.600000000002
+      },
+      {
+        "descripcion": "User-friendly discrete alliance",
+        "cantidad": 1,
+        "precio_unitario": 3166.54,
+        "total": 3166.54
+      },
+      {
+        "descripcion": "Visionary upward-trending system engine",
+        "cantidad": 7,
+        "precio_unitario": 1085.51,
+        "total": 7598.57
+      }
+    ],
+    "subtotal": 34348.71000000001,
+    "iva": 7213.23,
+    "total": 41561.94
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "9025-20547442",
+    "fecha_emision": "26/09/2024",
+    "fecha_vencimiento": "14/11/2024",
+    "cuit_emisor": "26-74789356-0",
+    "razon_social_emisor": "Vega Inc",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Focused impactful flexibility",
+        "cantidad": 6,
+        "precio_unitario": 2458.19,
+        "total": 14749.14
+      },
+      {
+        "descripcion": "Centralized value-added info-mediaries",
+        "cantidad": 2,
+        "precio_unitario": 3363.01,
+        "total": 6726.02
+      },
+      {
+        "descripcion": "Robust stable moderator",
+        "cantidad": 2,
+        "precio_unitario": 1361.51,
+        "total": 2723.02
+      }
+    ],
+    "subtotal": 24198.18,
+    "iva": 5081.62,
+    "total": 29279.8
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "8356-79463718",
+    "fecha_emision": "15/09/2024",
+    "fecha_vencimiento": "29/10/2024",
+    "cuit_emisor": "20-89227474-9",
+    "razon_social_emisor": "Cruz Inc",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Proactive attitude-oriented open system",
+        "cantidad": 5,
+        "precio_unitario": 1237.2,
+        "total": 6186.0
+      },
+      {
+        "descripcion": "Managed impactful parallelism",
+        "cantidad": 7,
+        "precio_unitario": 3083.56,
+        "total": 21584.92
+      },
+      {
+        "descripcion": "Persevering systemic synergy",
+        "cantidad": 10,
+        "precio_unitario": 4185.79,
+        "total": 41857.9
+      },
+      {
+        "descripcion": "Object-based grid-enabled project",
+        "cantidad": 7,
+        "precio_unitario": 962.58,
+        "total": 6738.06
+      },
+      {
+        "descripcion": "Realigned needs-based knowledge user",
+        "cantidad": 3,
+        "precio_unitario": 3098.34,
+        "total": 9295.02
+      }
+    ],
+    "subtotal": 85661.90000000001,
+    "iva": 17989.0,
+    "total": 103650.90000000001
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "2767-03952541",
+    "fecha_emision": "15/07/2025",
+    "fecha_vencimiento": "01/09/2025",
+    "cuit_emisor": "27-97087504-9",
+    "razon_social_emisor": "Vega Ltd",
+    "cuit_receptor": "23-72346944-5",
+    "razon_social_receptor": "Gonzalez PLC",
+    "items": [
+      {
+        "descripcion": "Monitored analyzing installation",
+        "cantidad": 2,
+        "precio_unitario": 3619.62,
+        "total": 7239.24
+      }
+    ],
+    "subtotal": 7239.24,
+    "iva": 1520.24,
+    "total": 8759.48
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "2875-89132291",
+    "fecha_emision": "08/08/2025",
+    "fecha_vencimiento": "11/09/2025",
+    "cuit_emisor": "28-98580623-0",
+    "razon_social_emisor": "Alvarez, Morales and Fernandez",
+    "cuit_receptor": "25-17546430-4",
+    "razon_social_receptor": "Moyano Inc",
+    "items": [
+      {
+        "descripcion": "Profound composite Graphic Interface",
+        "cantidad": 10,
+        "precio_unitario": 2766.54,
+        "total": 27665.4
+      },
+      {
+        "descripcion": "Devolved 4thgeneration artificial intelligence",
+        "cantidad": 3,
+        "precio_unitario": 4471.82,
+        "total": 13415.46
+      },
+      {
+        "descripcion": "Robust user-facing project",
+        "cantidad": 1,
+        "precio_unitario": 1133.27,
+        "total": 1133.27
+      }
+    ],
+    "subtotal": 42214.13,
+    "iva": 8864.97,
+    "total": 51079.1
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "4219-74700353",
+    "fecha_emision": "21/08/2025",
+    "fecha_vencimiento": "22/09/2025",
+    "cuit_emisor": "21-31040794-4",
+    "razon_social_emisor": "Lucero Group",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "User-centric optimal utilization",
+        "cantidad": 10,
+        "precio_unitario": 1837.41,
+        "total": 18374.100000000002
+      },
+      {
+        "descripcion": "Operative methodical projection",
+        "cantidad": 3,
+        "precio_unitario": 1206.12,
+        "total": 3618.3599999999997
+      },
+      {
+        "descripcion": "Down-sized asynchronous capacity",
+        "cantidad": 8,
+        "precio_unitario": 4393.22,
+        "total": 35145.76
+      },
+      {
+        "descripcion": "Triple-buffered solution-oriented capability",
+        "cantidad": 3,
+        "precio_unitario": 2199.08,
+        "total": 6597.24
+      },
+      {
+        "descripcion": "Multi-lateral discrete productivity",
+        "cantidad": 1,
+        "precio_unitario": 3485.17,
+        "total": 3485.17
+      }
+    ],
+    "subtotal": 67220.63,
+    "iva": 14116.33,
+    "total": 81336.96
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "9507-47251083",
+    "fecha_emision": "18/10/2024",
+    "fecha_vencimiento": "07/11/2024",
+    "cuit_emisor": "22-85984413-4",
+    "razon_social_emisor": "Juarez, Benitez and Ayala",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Implemented regional help-desk",
+        "cantidad": 5,
+        "precio_unitario": 2956.12,
+        "total": 14780.599999999999
+      },
+      {
+        "descripcion": "Team-oriented responsive architecture",
+        "cantidad": 7,
+        "precio_unitario": 4573.48,
+        "total": 32014.359999999997
+      },
+      {
+        "descripcion": "Innovative attitude-oriented adapter",
+        "cantidad": 4,
+        "precio_unitario": 4832.84,
+        "total": 19331.36
+      }
+    ],
+    "subtotal": 66126.31999999999,
+    "iva": 13886.53,
+    "total": 80012.84999999999
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "3127-88773500",
+    "fecha_emision": "04/11/2024",
+    "fecha_vencimiento": "14/12/2024",
+    "cuit_emisor": "27-10441823-0",
+    "razon_social_emisor": "Navarro, Flores and Silva",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Streamlined intangible emulation",
+        "cantidad": 6,
+        "precio_unitario": 2414.33,
+        "total": 14485.98
+      },
+      {
+        "descripcion": "Object-based real-time customer loyalty",
+        "cantidad": 5,
+        "precio_unitario": 1951.83,
+        "total": 9759.15
+      }
+    ],
+    "subtotal": 24245.129999999997,
+    "iva": 5091.48,
+    "total": 29336.609999999997
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "9379-60468108",
+    "fecha_emision": "02/12/2024",
+    "fecha_vencimiento": "21/01/2025",
+    "cuit_emisor": "23-96097900-3",
+    "razon_social_emisor": "Garcia-Ledesma",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Up-sized high-level hub",
+        "cantidad": 6,
+        "precio_unitario": 4663.9,
+        "total": 27983.399999999998
+      },
+      {
+        "descripcion": "Upgradable logistical infrastructure",
+        "cantidad": 7,
+        "precio_unitario": 3984.53,
+        "total": 27891.710000000003
+      },
+      {
+        "descripcion": "Distributed attitude-oriented support",
+        "cantidad": 6,
+        "precio_unitario": 2717.98,
+        "total": 16307.880000000001
+      }
+    ],
+    "subtotal": 72182.99,
+    "iva": 15158.43,
+    "total": 87341.42000000001
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "1479-48835798",
+    "fecha_emision": "12/04/2025",
+    "fecha_vencimiento": "20/05/2025",
+    "cuit_emisor": "24-13588518-7",
+    "razon_social_emisor": "Pereyra-Suarez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Total stable neural-net",
+        "cantidad": 3,
+        "precio_unitario": 499.86,
+        "total": 1499.58
+      },
+      {
+        "descripcion": "Compatible coherent strategy",
+        "cantidad": 1,
+        "precio_unitario": 2487.51,
+        "total": 2487.51
+      },
+      {
+        "descripcion": "Ameliorated client-server interface",
+        "cantidad": 10,
+        "precio_unitario": 4944.08,
+        "total": 49440.8
+      },
+      {
+        "descripcion": "Enhanced secondary encoding",
+        "cantidad": 6,
+        "precio_unitario": 3120.25,
+        "total": 18721.5
+      }
+    ],
+    "subtotal": 72149.39,
+    "iva": 15151.37,
+    "total": 87300.76
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "3148-96918613",
+    "fecha_emision": "29/04/2025",
+    "fecha_vencimiento": "24/06/2025",
+    "cuit_emisor": "21-12999990-3",
+    "razon_social_emisor": "Lopez-Lopez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Reactive zero-defect monitoring",
+        "cantidad": 3,
+        "precio_unitario": 310.39,
+        "total": 931.17
+      },
+      {
+        "descripcion": "Public-key transitional Graphical User Interface",
+        "cantidad": 5,
+        "precio_unitario": 2035.27,
+        "total": 10176.35
+      }
+    ],
+    "subtotal": 11107.52,
+    "iva": 2332.58,
+    "total": 13440.1
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "7949-36620328",
+    "fecha_emision": "02/10/2024",
+    "fecha_vencimiento": "16/11/2024",
+    "cuit_emisor": "28-58457356-3",
+    "razon_social_emisor": "Alvarez, Rodriguez and Caceres",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Streamlined solution-oriented implementation",
+        "cantidad": 7,
+        "precio_unitario": 2560.24,
+        "total": 17921.68
+      }
+    ],
+    "subtotal": 17921.68,
+    "iva": 3763.55,
+    "total": 21685.23
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "7920-79975498",
+    "fecha_emision": "28/12/2024",
+    "fecha_vencimiento": "12/02/2025",
+    "cuit_emisor": "21-40209272-4",
+    "razon_social_emisor": "Paz and Sons",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Open-source impactful frame",
+        "cantidad": 5,
+        "precio_unitario": 3021.12,
+        "total": 15105.599999999999
+      },
+      {
+        "descripcion": "Fundamental 24hour Graphic Interface",
+        "cantidad": 4,
+        "precio_unitario": 2919.49,
+        "total": 11677.96
+      },
+      {
+        "descripcion": "Balanced directional neural-net",
+        "cantidad": 6,
+        "precio_unitario": 2547.38,
+        "total": 15284.28
+      },
+      {
+        "descripcion": "Programmable heuristic initiative",
+        "cantidad": 3,
+        "precio_unitario": 563.51,
+        "total": 1690.53
+      },
+      {
+        "descripcion": "Fully-configurable static analyzer",
+        "cantidad": 6,
+        "precio_unitario": 1047.27,
+        "total": 6283.62
+      }
+    ],
+    "subtotal": 50041.99,
+    "iva": 10508.82,
+    "total": 60550.81
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "9190-47530127",
+    "fecha_emision": "15/12/2024",
+    "fecha_vencimiento": "28/01/2025",
+    "cuit_emisor": "29-72895406-9",
+    "razon_social_emisor": "Alvarez-Mansilla",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Devolved next generation monitoring",
+        "cantidad": 10,
+        "precio_unitario": 1827.55,
+        "total": 18275.5
+      },
+      {
+        "descripcion": "Extended stable parallelism",
+        "cantidad": 6,
+        "precio_unitario": 4276.42,
+        "total": 25658.52
+      },
+      {
+        "descripcion": "Pre-emptive explicit system engine",
+        "cantidad": 9,
+        "precio_unitario": 4534.27,
+        "total": 40808.43000000001
+      },
+      {
+        "descripcion": "Up-sized homogeneous data-warehouse",
+        "cantidad": 7,
+        "precio_unitario": 302.11,
+        "total": 2114.77
+      }
+    ],
+    "subtotal": 86857.22000000002,
+    "iva": 18240.02,
+    "total": 105097.24000000002
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "2013-31210470",
+    "fecha_emision": "09/06/2025",
+    "fecha_vencimiento": "04/07/2025",
+    "cuit_emisor": "26-72743578-1",
+    "razon_social_emisor": "Ferreyra LLC",
+    "cuit_receptor": "24-89827369-8",
+    "razon_social_receptor": "Diaz-Gutierrez",
+    "items": [
+      {
+        "descripcion": "Realigned explicit adapter",
+        "cantidad": 5,
+        "precio_unitario": 2575.95,
+        "total": 12879.75
+      },
+      {
+        "descripcion": "Virtual mobile complexity",
+        "cantidad": 5,
+        "precio_unitario": 930.49,
+        "total": 4652.45
+      },
+      {
+        "descripcion": "Right-sized zero-defect model",
+        "cantidad": 8,
+        "precio_unitario": 299.45,
+        "total": 2395.6
+      },
+      {
+        "descripcion": "Centralized 6thgeneration Graphic Interface",
+        "cantidad": 7,
+        "precio_unitario": 378.4,
+        "total": 2648.7999999999997
+      }
+    ],
+    "subtotal": 22576.6,
+    "iva": 4741.09,
+    "total": 27317.69
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "8594-64226605",
+    "fecha_emision": "01/11/2024",
+    "fecha_vencimiento": "29/12/2024",
+    "cuit_emisor": "29-79643883-8",
+    "razon_social_emisor": "Garcia Ltd",
+    "cuit_receptor": "22-40154432-1",
+    "razon_social_receptor": "Olivera, Vargas and Ramirez",
+    "items": [
+      {
+        "descripcion": "Distributed uniform encoding",
+        "cantidad": 8,
+        "precio_unitario": 1168.69,
+        "total": 9349.52
+      }
+    ],
+    "subtotal": 9349.52,
+    "iva": 1963.4,
+    "total": 11312.92
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "2343-02969052",
+    "fecha_emision": "16/05/2025",
+    "fecha_vencimiento": "15/07/2025",
+    "cuit_emisor": "21-25166730-6",
+    "razon_social_emisor": "Juarez LLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Cross-group actuating capacity",
+        "cantidad": 2,
+        "precio_unitario": 2192.08,
+        "total": 4384.16
+      },
+      {
+        "descripcion": "Function-based clear-thinking contingency",
+        "cantidad": 9,
+        "precio_unitario": 2618.57,
+        "total": 23567.13
+      },
+      {
+        "descripcion": "Profit-focused 3rdgeneration middleware",
+        "cantidad": 1,
+        "precio_unitario": 4394.33,
+        "total": 4394.33
+      }
+    ],
+    "subtotal": 32345.620000000003,
+    "iva": 6792.58,
+    "total": 39138.200000000004
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "3715-58805851",
+    "fecha_emision": "16/09/2024",
+    "fecha_vencimiento": "29/10/2024",
+    "cuit_emisor": "27-56729805-8",
+    "razon_social_emisor": "Muñoz-Ramirez",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Expanded impactful conglomeration",
+        "cantidad": 8,
+        "precio_unitario": 3062.94,
+        "total": 24503.52
+      },
+      {
+        "descripcion": "Operative solution-oriented strategy",
+        "cantidad": 9,
+        "precio_unitario": 3448.04,
+        "total": 31032.36
+      },
+      {
+        "descripcion": "Profit-focused optimizing flexibility",
+        "cantidad": 9,
+        "precio_unitario": 4582.19,
+        "total": 41239.71
+      },
+      {
+        "descripcion": "Enterprise-wide encompassing policy",
+        "cantidad": 8,
+        "precio_unitario": 754.35,
+        "total": 6034.8
+      }
+    ],
+    "subtotal": 102810.39,
+    "iva": 21590.18,
+    "total": 124400.57
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "0728-11051895",
+    "fecha_emision": "27/07/2025",
+    "fecha_vencimiento": "26/08/2025",
+    "cuit_emisor": "27-16386150-9",
+    "razon_social_emisor": "Ruiz, Vazquez and Valdez",
+    "cuit_receptor": "26-48804707-2",
+    "razon_social_receptor": "Fernandez, Sanchez and Alvarez",
+    "items": [
+      {
+        "descripcion": "Persevering zero-defect groupware",
+        "cantidad": 6,
+        "precio_unitario": 4075.79,
+        "total": 24454.739999999998
+      }
+    ],
+    "subtotal": 24454.739999999998,
+    "iva": 5135.5,
+    "total": 29590.239999999998
+  },
+  {
+    "tipo_factura": "A",
+    "numero_factura": "5969-14140392",
+    "fecha_emision": "07/10/2024",
+    "fecha_vencimiento": "03/12/2024",
+    "cuit_emisor": "23-56890386-1",
+    "razon_social_emisor": "Bustos, Gonzalez and Mansilla",
+    "cuit_receptor": "27-51713753-5",
+    "razon_social_receptor": "Soria, Muñoz and Correa",
+    "items": [
+      {
+        "descripcion": "User-friendly explicit database",
+        "cantidad": 10,
+        "precio_unitario": 519.05,
+        "total": 5190.5
+      },
+      {
+        "descripcion": "Programmable intermediate application",
+        "cantidad": 4,
+        "precio_unitario": 2916.52,
+        "total": 11666.08
+      },
+      {
+        "descripcion": "Synergistic context-sensitive product",
+        "cantidad": 1,
+        "precio_unitario": 1817.37,
+        "total": 1817.37
+      },
+      {
+        "descripcion": "Innovative incremental model",
+        "cantidad": 6,
+        "precio_unitario": 2207.93,
+        "total": 13247.579999999998
+      },
+      {
+        "descripcion": "Decentralized fault-tolerant functionalities",
+        "cantidad": 5,
+        "precio_unitario": 4278.53,
+        "total": 21392.649999999998
+      }
+    ],
+    "subtotal": 53314.17999999999,
+    "iva": 11195.98,
+    "total": 64510.15999999999
+  },
+  {
+    "tipo_factura": "C",
+    "numero_factura": "5051-47466363",
+    "fecha_emision": "05/03/2025",
+    "fecha_vencimiento": "08/04/2025",
+    "cuit_emisor": "23-35278676-6",
+    "razon_social_emisor": "Ruiz PLC",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Progressive foreground extranet",
+        "cantidad": 10,
+        "precio_unitario": 2156.14,
+        "total": 21561.399999999998
+      },
+      {
+        "descripcion": "Face-to-face foreground instruction set",
+        "cantidad": 10,
+        "precio_unitario": 2501.84,
+        "total": 25018.4
+      }
+    ],
+    "subtotal": 46579.8,
+    "iva": 9781.76,
+    "total": 56361.560000000005
+  },
+  {
+    "tipo_factura": "B",
+    "numero_factura": "9035-09756558",
+    "fecha_emision": "15/08/2025",
+    "fecha_vencimiento": "19/09/2025",
+    "cuit_emisor": "21-41821287-5",
+    "razon_social_emisor": "Lopez, Cardozo and Acosta",
+    "cuit_receptor": null,
+    "razon_social_receptor": null,
+    "items": [
+      {
+        "descripcion": "Mandatory empowering encoding",
+        "cantidad": 5,
+        "precio_unitario": 4783.03,
+        "total": 23915.149999999998
+      },
+      {
+        "descripcion": "Seamless motivating hub",
+        "cantidad": 9,
+        "precio_unitario": 1854.05,
+        "total": 16686.45
+      },
+      {
+        "descripcion": "Pre-emptive mission-critical attitude",
+        "cantidad": 1,
+        "precio_unitario": 3870.77,
+        "total": 3870.77
+      },
+      {
+        "descripcion": "Function-based solution-oriented structure",
+        "cantidad": 9,
+        "precio_unitario": 3440.18,
+        "total": 30961.62
+      }
+    ],
+    "subtotal": 75433.98999999999,
+    "iva": 15841.14,
+    "total": 91275.12999999999
+  }
+]

@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ocr_database
+      POSTGRES_USER: ocr_user
+      POSTGRES_PASSWORD: your_secure_password_here
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ocr-network
+
+  # Redis para cola de tareas
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ocr-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://ocr_user:your_secure_password_here@db:5432/ocr_database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - SECRET_KEY_JWT=your_super_secret_jwt_key_here_make_it_long_and_random
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
+      - YOLO_MODELS_PATH=/app/models/yolo_models
+    volumes:
+      - ./backend/uploaded_documents_local:/app/uploaded_documents_local
+      - ./backend/models:/app/models
+    depends_on:
+      - db
+      - redis
+    networks:
+      - ocr-network
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - ocr-network
+
+  # Worker OCR (opcional)
+  ocr-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m ocr_worker.worker
+    environment:
+      - DATABASE_URL=postgresql://ocr_user:your_secure_password_here@db:5432/ocr_database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
+      - YOLO_MODELS_PATH=/app/models/yolo_models
+    volumes:
+      - ./backend/uploaded_documents_local:/app/uploaded_documents_local
+      - ./backend/models:/app/models
+    depends_on:
+      - db
+      - redis
+      - backend
+    networks:
+      - ocr-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  ocr-network:
+    driver: bridge
+
