@@ -33,7 +33,7 @@ const RenderCounter: React.FC<RenderCounterProps> = ({ componentName, showDetail
     }
     
     setRenderReasons(prev => [...prev.slice(-2), ...reasons]);
-  });
+  }, [componentName]); // ✅ Agregar dependencia para evitar loop infinito
 
   const getStatusColor = () => {
     if (renderCount.current <= 2) return '#4CAF50'; // Verde - Normal

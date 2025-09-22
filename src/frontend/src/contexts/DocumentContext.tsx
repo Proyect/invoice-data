@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { documentService } from '../services/api';
 import { Document, DocumentStatus, DocumentType, DocumentUploadResponse } from './../types/document';
 import { useAuth } from './SimpleAuthContext';
@@ -180,8 +180,8 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     }
   }, [user, token]); // ✅ Dependencias de autenticación
 
-  // Crear valor del contexto de forma estable
-  const contextValue = {
+  // Crear valor del contexto de forma estable usando useMemo
+  const contextValue = useMemo(() => ({
     documents,
     loading,
     uploadDocument,
@@ -191,7 +191,17 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     deleteDocument,
     downloadDocument,
     refreshDocuments
-  };
+  }), [
+    documents,
+    loading,
+    uploadDocument,
+    getDocumentStatus,
+    getExtractedData,
+    getStructuredData,
+    deleteDocument,
+    downloadDocument,
+    refreshDocuments
+  ]);
 
   return (
     <DocumentContext.Provider value={contextValue}>

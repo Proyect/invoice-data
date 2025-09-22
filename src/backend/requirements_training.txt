@@ -1,10 +1,16 @@
-# Dependencias adicionales para entrenamiento de modelos YOLO
+# Dependencias avanzadas para entrenamiento de modelos YOLO
 # Instalar con: pip install -r requirements_training.txt
 
-# YOLO y Computer Vision
+# YOLO y Computer Vision (Core)
 ultralytics>=8.0.0
 opencv-python>=4.8.0
 pillow>=9.0.0
+
+# PyTorch (instalar según tu configuración de GPU)
+# Para GPU NVIDIA (CUDA 11.8):
+# torch>=1.13.0+cu118 torchvision>=0.14.0+cu118 torchaudio>=0.13.0+cu118 --index-url https://download.pytorch.org/whl/cu118
+# Para CPU solamente:
+torch>=1.13.0 torchvision>=0.14.0 torchaudio>=0.13.0
 
 # Anotación de datos
 labelImg>=1.8.6
@@ -27,6 +33,7 @@ tensorboard>=2.10.0
 tqdm>=4.64.0
 pyyaml>=6.0
 pathlib2>=2.3.0
+psutil>=5.9.0
 
 # Procesamiento de imágenes avanzado
 albumentations>=1.3.0
@@ -36,6 +43,24 @@ imgaug>=0.4.0
 onnx>=1.12.0
 onnxruntime>=1.12.0
 
-# GPU (opcional, instalar solo si tienes GPU NVIDIA)
-# torch>=1.12.0+cu116
-# torchvision>=0.13.0+cu116
+# Monitoreo y logging
+wandb>=0.13.0
+
+# Análisis y estadísticas
+plotly>=5.0.0
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+
+# Optimización de rendimiento
+numba>=0.56.0
+
+# Validación de datos
+great-expectations>=0.15.0
+
+# Procesamiento de texto (para OCR post-procesamiento)
+pytesseract>=0.3.10
+easyocr>=1.6.0
+
+# Manejo de archivos y formatos
+openpyxl>=3.0.0
+xlsxwriter>=3.0.0

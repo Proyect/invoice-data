@@ -1,0 +1,24 @@
+{
+  "system": {
+    "device": "cpu",
+    "workers": 8,
+    "batch_size": 8
+  },
+  "training": {
+    "default_epochs": 300,
+    "patience": 50,
+    "save_period": 10,
+    "validation_interval": 1
+  },
+  "optimization": {
+    "use_hyperopt": true,
+    "n_trials": 50,
+    "use_cross_validation": false,
+    "n_folds": 5
+  },
+  "monitoring": {
+    "use_wandb": true,
+    "wandb_project": "ocr-document-detection",
+    "monitoring_interval": 30
+  }
+}

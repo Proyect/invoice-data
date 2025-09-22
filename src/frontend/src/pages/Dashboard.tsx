@@ -27,7 +27,7 @@ import { getDocumentTypeLabel, getStatusColor } from '../utils/documentUtils';
 import { logRender } from '../utils/debugUtils';
 
 const Dashboard: React.FC = () => {
-  logRender('Dashboard');
+  // logRender('Dashboard'); // ✅ Comentado para evitar logs excesivos
   const navigate = useNavigate();
   const { documents, loading } = useDocuments();
 

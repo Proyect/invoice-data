@@ -1,0 +1,22 @@
+{
+  "setup_date": "2025-09-19 08:14:55.911035",
+  "system_info": {
+    "platform": "Windows",
+    "python_version": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+    "architecture": "64bit",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 20
+  },
+  "config_paths": {
+    "venv_dir": "yolo_training_env",
+    "requirements_file": "requirements_training.txt",
+    "config_dir": "configs",
+    "datasets_dir": "datasets",
+    "models_dir": "models\\yolo_models",
+    "scripts_dir": "scripts",
+    "logs_dir": "logs"
+  },
+  "venv_exists": true,
+  "directories_created": true,
+  "cuda_available": false
+}
