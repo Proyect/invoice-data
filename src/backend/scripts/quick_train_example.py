@@ -33,25 +33,41 @@ def main():
     print(f"   - Modelo: yolov8n.pt")
     
     try:
-        subprocess.run(cmd, check=True)
+        # Usar ultralytics directamente
+        from ultralytics import YOLO
+        
+        # Cargar modelo
+        model = YOLO("models/yolo_models/yolov8n.pt")
+        
+        # Entrenar
+        results = model.train(
+            data="example_dataset/dataset.yaml",
+            epochs=15,
+            imgsz=640,
+            batch=16,
+            device='auto',
+            project='quick_training',
+            name='quick_15ep',
+            save=True,
+            plots=True
+        )
+        
         print("✅ Entrenamiento completado!")
         
         # Hacer predicción de prueba
         print("\n🔮 Haciendo predicción de prueba...")
-        predict_cmd = [
-            "yolo_training_env/Scripts/yolo.exe", "detect", "predict",
-            "model=models/yolo_models/quick_15ep/weights/best.pt",
-            "source=models/yolo_models/test_invoice.jpg",
-            "imgsz=640",
-            "save=True",
-            "project=models/yolo_models",
-            "name=pred_quick_15ep"
-        ]
+        test_results = model.predict(
+            source="models/yolo_models/test_invoice.jpg",
+            imgsz=640,
+            save=True,
+            project="models/yolo_models",
+            name="pred_quick_15ep"
+        )
         
-        subprocess.run(predict_cmd, check=True)
         print("✅ Predicción completada!")
         
-        print(f"\n🎉 ¡Listo!")
+        print(f"\n🎉 ¡Entrenamiento y predicción completados!")
+        print(f"📁 Resultados guardados en: models/yolo_models/pred_quick_15ep/")
         print(f"   - Modelo: models/yolo_models/quick_15ep/weights/best.pt")
         print(f"   - Predicción: models/yolo_models/pred_quick_15ep/")
         
