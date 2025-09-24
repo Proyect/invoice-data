@@ -1,0 +1,142 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL - ESENCIAL
+  db:
+    image: postgres:15-alpine
+    container_name: invoice_db_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ocr_database
+      POSTGRES_USER: ocr_user
+      POSTGRES_PASSWORD: dev_password_123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ocr_user -d ocr_database"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ocr-dev-network
+      
+  # Redis para Celery - ESENCIAL
+  redis:
+    image: redis:7-alpine
+    container_name: invoice_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ocr-dev-network
+
+  # Backend API - ESENCIAL
+  api:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: invoice_api_dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/docker.env
+    environment:
+      - DATABASE_URL=postgresql://ocr_user:dev_password_123@db:5432/ocr_database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY_JWT=dev_jwt_secret_key_for_development_only
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
+      - YOLO_MODELS_PATH=/app/models/yolo_models
+      - PYTHONPATH=/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - shared_storage:/app/uploaded_documents_local
+      - model_storage:/app/models/yolo_models
+      - ./backend/logs:/app/logs
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - ocr-dev-network
+
+  # Celery Worker - ÚTIL PARA PROCESAMIENTO OCR
+  celery_worker:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: invoice_celery_worker_dev
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://ocr_user:dev_password_123@db:5432/ocr_database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_URL=redis://redis:6379/0
+      - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
+      - YOLO_MODELS_PATH=/app/models/yolo_models
+      - PYTHONPATH=/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - shared_storage:/app/uploaded_documents_local
+      - model_storage:/app/models/yolo_models
+      - ./backend/logs:/app/logs
+    command: celery -A ocr_worker.celery_app worker --loglevel=info --concurrency=2
+    networks:
+      - ocr-dev-network
+
+  # Celery Flower - OPCIONAL PARA DEBUG
+  celery_flower:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: invoice_celery_flower_dev
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A ocr_worker.celery_app flower --port=5555
+    networks:
+      - ocr-dev-network
+
+volumes:
+  postgres_data:
+    name: invoice_postgres_data
+  redis_data:
+    name: invoice_redis_data
+  shared_storage:
+    name: invoice_shared_storage
+  model_storage:
+    name: invoice_model_storage
+
+networks:
+  ocr-dev-network:
+    name: invoice-dev-network
+    driver: bridge

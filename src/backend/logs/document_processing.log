@@ -1,0 +1,9 @@
+2025-09-23 15:50:35,760 - __main__ - ERROR - Error general en procesamiento: No module named 'decouple'
+Traceback (most recent call last):
+  File "C:\Users\amdiaz\Desktop\code\Python\v.13.13\invoice-data\src\backend\scripts\process_pending_documents.py", line 43, in process_all_pending_documents
+    from database import SessionLocal
+  File "C:\Users\amdiaz\Desktop\code\Python\v.13.13\invoice-data\src\backend\database.py", line 12, in <module>
+    from config import DATABASE_URL
+  File "C:\Users\amdiaz\Desktop\code\Python\v.13.13\invoice-data\src\backend\config.py", line 1, in <module>
+    from decouple import config
+ModuleNotFoundError: No module named 'decouple'
