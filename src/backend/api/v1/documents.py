@@ -6,6 +6,7 @@ from typing import Annotated
 import uuid
 import logging
 import os
+import httpx
 from sqlalchemy.orm import Session
 
 from models.documents import DocumentUploadResponse, DocumentStatusResponse, DocumentType
@@ -20,6 +21,31 @@ from database import get_db
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+@router.post("/infer", summary="Proxy de inferencia RT-DETR")
+async def infer_document(
+    file: Annotated[UploadFile, File(description="Imagen o PDF")],
+    document_type: Annotated[str, Query(description="Tipo de documento", regex="^(invoice|dni_front|dni_back)$")] = "invoice",
+):
+    """
+    Reenvía el archivo al servicio RT-DETR para detección de campos.
+    Devuelve detecciones y campos extraídos (mock o reales).
+    """
+    base_url = os.getenv("RTDETR_API_URL", "http://localhost:8010")
+    infer_url = f"{base_url}/infer"
+
+    try:
+        file_bytes = await file.read()
+        async with httpx.AsyncClient(timeout=60) as client:
+            files = {"file": (file.filename or "upload.bin", file_bytes, file.content_type or "application/octet-stream")}
+            params = {"document_type": document_type}
+            resp = await client.post(infer_url, params=params, files=files)
+            resp.raise_for_status()
+            return resp.json()
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=f"RT-DETR error: {e.response.text}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al invocar RT-DETR: {str(e)}")
 
 @router.post("/upload", response_model=DocumentUploadResponse, status_code=status.HTTP_202_ACCEPTED, summary="Subir un documento para OCR")
 async def upload_document(
