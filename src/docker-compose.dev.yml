@@ -59,6 +59,7 @@ services:
       - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
       - YOLO_MODELS_PATH=/app/models/yolo_models
       - PYTHONPATH=/app
+      - RTDETR_API_URL=http://rtdetr_api:8010
     ports:
       - "8000:8000"
     depends_on:
@@ -66,12 +67,30 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rtdetr_api:
+        condition: service_started
     volumes:
       - ./backend:/app
       - shared_storage:/app/uploaded_documents_local
       - model_storage:/app/models/yolo_models
       - ./backend/logs:/app/logs
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - ocr-dev-network
+
+  # RT-DETR API - Alternativa a YOLO para detección de campos
+  rtdetr_api:
+    build:
+      context: ../invoice-data-simple-AI/backend
+      dockerfile: Dockerfile
+    container_name: rtdetr_api_dev
+    restart: unless-stopped
+    ports:
+      - "8010:8010"
+    volumes:
+      - ../invoice-data-simple-AI/backend:/app
+      - ../invoice-data-simple-AI/models:/app/models
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8010 --reload
     networks:
       - ocr-dev-network
 
