@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
-import { useDocuments } from '../contexts/DocumentContext';
+import { useDocuments } from '../contexts/OptimizedDocumentContext';
 import { DocumentType } from '../types/document';
 import { getDocumentTypeLabel, formatFileSize } from '../utils/documentUtils';
 import toast from 'react-hot-toast';

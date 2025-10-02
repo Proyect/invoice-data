@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { authService } from '../services/api';
 import { User, LoginCredentials } from '../types/auth';
 
@@ -29,46 +29,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Cargar token al inicializar
+  // Inicializar autenticación solo una vez
   useEffect(() => {
-    const initializeAuth = () => {
-      try {
-        const storedToken = localStorage.getItem('token');
-        if (storedToken) {
-          setToken(storedToken);
-          setUser({
-            id: '1',
-            username: 'user',
-            email: '',
-            full_name: 'Usuario',
-            disabled: false
-          });
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeAuth();
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      setUser({
+        id: '1',
+        username: 'user',
+        email: '',
+        full_name: 'Usuario',
+        disabled: false
+      });
+    }
+    setLoading(false);
   }, []);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
+    setLoading(true);
     try {
-      console.log('Intentando login con:', credentials);
       const response = await authService.login(credentials);
-      console.log('Respuesta del servidor:', response);
-      
       const { access_token } = response;
-      
+
       if (!access_token) {
         throw new Error('No se recibió token de acceso');
       }
-      
+
       setToken(access_token);
       localStorage.setItem('token', access_token);
-      
       setUser({
         id: '1',
         username: credentials.username,
@@ -76,11 +64,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         full_name: credentials.username,
         disabled: false
       });
-      
-      console.log('Login exitoso');
     } catch (error) {
-      console.error('Error en login:', error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -90,16 +77,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('token');
   }, []);
 
-  const value = useMemo(() => ({
+  // Crear el valor del contexto de forma estable
+  const contextValue: AuthContextType = {
     user,
     token,
     login,
     logout,
     loading
-  }), [user, token, login, logout, loading]); // ✅ Todas las dependencias incluidas
+  };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

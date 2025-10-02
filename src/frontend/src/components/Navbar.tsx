@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -17,7 +17,7 @@ import {
   Dashboard as DashboardIcon
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useAuth } from '../contexts/StableAuthContext';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -25,21 +25,21 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     navigate('/login');
     handleClose();
-  };
+  }, [logout, navigate, handleClose]);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
 
   return (
     <AppBar position="static">
@@ -131,4 +131,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-

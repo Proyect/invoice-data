@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -35,10 +35,9 @@ import {
   FilterList
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useDocuments } from '../contexts/DocumentContext';
+import { useDocuments } from '../contexts/OptimizedDocumentContext';
 import { DocumentType } from '../types/document';
 import { getDocumentTypeLabel, getStatusColor, getStatusLabel, formatDate } from '../utils/documentUtils';
-import RenderCounter from '../components/RenderCounter';
 import NotificationToast from '../components/NotificationToast';
 
 const DocumentList: React.FC = () => {
@@ -91,32 +90,32 @@ const DocumentList: React.FC = () => {
     setPage(1);
   }, [searchTerm, statusFilter, typeFilter]);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, documentId: string) => {
+  const handleMenuClick = useCallback((event: React.MouseEvent<HTMLElement>, documentId: string) => {
     setAnchorEl(event.currentTarget);
     setSelectedDocument(documentId);
-  };
+  }, []);
 
-  const handleMenuClose = () => {
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null);
     setSelectedDocument(null);
-  };
+  }, []);
 
-  const handleViewDocument = () => {
+  const handleViewDocument = useCallback(() => {
     if (selectedDocument) {
       navigate(`/documents/${selectedDocument}`);
     }
     handleMenuClose();
-  };
+  }, [selectedDocument, navigate, handleMenuClose]);
 
-  const handleDeleteDocument = () => {
+  const handleDeleteDocument = useCallback(() => {
     if (selectedDocument) {
       setDocumentToDelete(selectedDocument);
       setDeleteConfirmOpen(true);
     }
     handleMenuClose();
-  };
+  }, [selectedDocument, handleMenuClose]);
 
-  const handleDownloadDocument = async () => {
+  const handleDownloadDocument = useCallback(async () => {
     if (selectedDocument) {
       try {
         const document = documents.find(doc => doc.id === selectedDocument);
@@ -138,9 +137,9 @@ const DocumentList: React.FC = () => {
       }
     }
     handleMenuClose();
-  };
+  }, [selectedDocument, documents, downloadDocument, handleMenuClose]);
 
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     if (documentToDelete) {
       try {
         await deleteDocument(documentToDelete);
@@ -152,22 +151,25 @@ const DocumentList: React.FC = () => {
         // Aquí podrías mostrar un mensaje de error al usuario
       }
     }
-  };
+  }, [documentToDelete, deleteDocument]);
 
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setDeleteConfirmOpen(false);
     setDocumentToDelete(null);
-  };
+  }, []);
 
-  const handleCloseNotification = () => {
+  const handleCloseNotification = useCallback(() => {
     setNotification(prev => ({ ...prev, open: false }));
-  };
+  }, []);
 
+  const handlePageChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  }, []);
 
-  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentDocuments = filteredDocuments.slice(startIndex, endIndex);
+  const totalPages = useMemo(() => Math.ceil(filteredDocuments.length / itemsPerPage), [filteredDocuments.length, itemsPerPage]);
+  const startIndex = useMemo(() => (page - 1) * itemsPerPage, [page, itemsPerPage]);
+  const endIndex = useMemo(() => startIndex + itemsPerPage, [startIndex, itemsPerPage]);
+  const currentDocuments = useMemo(() => filteredDocuments.slice(startIndex, endIndex), [filteredDocuments, startIndex, endIndex]);
 
   if (loading) {
     return (
@@ -181,7 +183,6 @@ const DocumentList: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <RenderCounter componentName="DocumentList" />
       <Typography variant="h4" gutterBottom>
         Documentos
       </Typography>
@@ -313,7 +314,7 @@ const DocumentList: React.FC = () => {
               <Pagination
                 count={totalPages}
                 page={page}
-                onChange={(e, value) => setPage(value)}
+                onChange={handlePageChange}
                 color="primary"
               />
             </Box>

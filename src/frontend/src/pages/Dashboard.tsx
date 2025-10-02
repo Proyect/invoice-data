@@ -1,4 +1,4 @@
-import React, { /*useEffect, useState,*/ useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   Container,
   Grid,
@@ -21,10 +21,10 @@ import {
   Schedule
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useDocuments } from '../contexts/DocumentContext';
+import { useDocuments } from '../contexts/OptimizedDocumentContext';
 //import { DocumentType } from '../types/document';
 import { getDocumentTypeLabel, getStatusColor } from '../utils/documentUtils';
-import { logRender } from '../utils/debugUtils';
+// import { logRender } from '../utils/debugUtils'; // Removed - debugUtils no longer exists
 
 const Dashboard: React.FC = () => {
   // logRender('Dashboard'); // ✅ Comentado para evitar logs excesivos
@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
     return { total, completed, pending, failed };
   }, [documents]);
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = useCallback((status: string) => {
     switch (status) {
       case 'COMPLETED':
         return <CheckCircle />;
@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
       default:
         return <DocumentScanner />;
     }
-  };
+  }, []);
 
   if (loading) {
     return (

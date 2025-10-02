@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { documentService } from '../services/api';
 import { Document, DocumentStatus, DocumentType, DocumentUploadResponse } from './../types/document';
-import { useAuth } from './SimpleAuthContext';
+import { useAuth } from './StableAuthContext';
 
 interface DocumentContextType {
   documents: Document[];
@@ -32,16 +32,51 @@ interface DocumentProviderProps {
 export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(false);
-  
-  // Obtener estado de autenticación
-  const { token } = useAuth();
+  const { user, token } = useAuth();
 
-  // Funciones simples sin useCallback
-  const uploadDocument = async (file: File, documentType: DocumentType): Promise<DocumentUploadResponse> => {
+  // Cargar documentos solo cuando el usuario esté autenticado
+  useEffect(() => {
+    if (!user || !token) {
+      setDocuments([]);
+      return;
+    }
+
+    const loadDocuments = async () => {
+      try {
+        setLoading(true);
+        // Cargando documentos iniciales
+        const response = await documentService.getDocuments();
+
+        const documentsList = response.documents
+          .map((doc: any) => ({
+            id: doc.id,
+            original_filename: doc.original_filename,
+            status: doc.status,
+            message: '',
+            document_type: doc.document_type,
+            uploaded_at: doc.uploaded_at,
+            processed_at: doc.processed_at,
+            processing_error: doc.processing_error
+          }))
+          .sort((a: Document, b: Document) => new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime());
+
+        setDocuments(documentsList);
+      } catch (error: any) {
+        console.error('Error loading initial documents:', error);
+        setDocuments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDocuments();
+  }, [user, token]);
+
+  const uploadDocument = useCallback(async (file: File, documentType: DocumentType): Promise<DocumentUploadResponse> => {
     setLoading(true);
     try {
       const response = await documentService.uploadDocument(file, documentType);
-      
+
       const newDocument: Document = {
         id: response.document_id,
         original_filename: response.filename,
@@ -52,27 +87,27 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
         processed_at: undefined,
         processing_error: undefined
       };
-      
+
       setDocuments(prev => [newDocument, ...prev]);
       return response;
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const getDocumentStatus = async (documentId: string): Promise<DocumentStatus> => {
+  const getDocumentStatus = useCallback(async (documentId: string): Promise<DocumentStatus> => {
     return await documentService.getDocumentStatus(documentId);
-  };
+  }, []);
 
-  const getExtractedData = async (documentId: string): Promise<any> => {
+  const getExtractedData = useCallback(async (documentId: string): Promise<any> => {
     return await documentService.getExtractedData(documentId);
-  };
+  }, []);
 
-  const getStructuredData = async (documentId: string): Promise<any> => {
+  const getStructuredData = useCallback(async (documentId: string): Promise<any> => {
     return await documentService.getStructuredData(documentId);
-  };
+  }, []);
 
-  const deleteDocument = async (documentId: string): Promise<void> => {
+  const deleteDocument = useCallback(async (documentId: string): Promise<void> => {
     setLoading(true);
     try {
       await documentService.deleteDocument(documentId);
@@ -80,52 +115,38 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const downloadDocument = async (documentId: string, filename: string): Promise<void> => {
-    try {
-      console.log(`🔄 Iniciando descarga: ${documentId} - ${filename}`);
-      
-      const blob = await documentService.downloadDocument(documentId);
-      
-      if (!blob || blob.size === 0) {
-        throw new Error('El archivo descargado está vacío o corrupto');
-      }
-      
-      console.log(`✅ Blob descargado: ${blob.size} bytes`);
-      
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      link.style.display = 'none';
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-      }, 100);
-      
-      console.log(`✅ Descarga completada: ${filename}`);
-      
-    } catch (error: any) {
-      console.error('❌ Error en descarga:', error);
-      throw new Error(`Error al descargar el archivo: ${error.message}`);
+  const downloadDocument = useCallback(async (documentId: string, filename: string): Promise<void> => {
+    const blob = await documentService.downloadDocument(documentId);
+
+    if (!blob || blob.size === 0) {
+      throw new Error('El archivo descargado está vacío o corrupto');
     }
-  };
 
-  const refreshDocuments = async (): Promise<void> => {
-    // Solo cargar documentos si hay token
-    if (!token) {
-      console.log('⏳ No hay token, saltando carga de documentos');
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  }, []);
+
+  const refreshDocuments = useCallback(async (): Promise<void> => {
+    if (!user || !token) {
+      // Usuario no autenticado, saltando refresh de documentos
       return;
     }
-    
+
     setLoading(true);
     try {
-      console.log('🔄 Cargando documentos...');
       const response = await documentService.getDocuments();
       const documentsList = response.documents
         .map((doc: any) => ({
@@ -145,9 +166,10 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, token]);
 
-  const value = {
+  // Memoizar el valor del contexto
+  const contextValue = useMemo(() => ({
     documents,
     loading,
     uploadDocument,
@@ -157,10 +179,20 @@ export const DocumentProvider: React.FC<DocumentProviderProps> = ({ children }) 
     deleteDocument,
     downloadDocument,
     refreshDocuments
-  };
+  }), [
+    documents,
+    loading,
+    uploadDocument,
+    getDocumentStatus,
+    getExtractedData,
+    getStructuredData,
+    deleteDocument,
+    downloadDocument,
+    refreshDocuments
+  ]);
 
   return (
-    <DocumentContext.Provider value={value}>
+    <DocumentContext.Provider value={contextValue}>
       {children}
     </DocumentContext.Provider>
   );

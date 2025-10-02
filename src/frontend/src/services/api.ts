@@ -40,7 +40,7 @@ class ApiService {
       params.append('username', credentials.username);
       params.append('password', credentials.password);
 
-      console.log('Enviando petición de login a:', this.api.defaults.baseURL + '/token');
+      // Enviando petición de login
       
       const response: AxiosResponse<TokenResponse> = await this.api.post('/token', params, {
         headers: {
@@ -48,8 +48,7 @@ class ApiService {
         },
       });
       
-      console.log('Respuesta completa del servidor:', response);
-      console.log('Datos de la respuesta:', response.data);
+      // Respuesta del servidor recibida
       
       return response.data;
     } catch (error: any) {
@@ -101,14 +100,14 @@ class ApiService {
   }
 
   async downloadDocument(documentId: string): Promise<Blob> {
-    console.log(`Iniciando descarga del documento: ${documentId}`);
+    // Iniciando descarga del documento
     try {
       const response = await this.api.get(`/documents/${documentId}/download`, {
         responseType: 'blob',
         timeout: 60000 // 60 segundos para descargas
       });
       
-      console.log(`Descarga exitosa, tamaño del blob: ${response.data.size} bytes`);
+      // Descarga exitosa
       
       // Verificar que el blob no esté vacío
       if (!response.data || response.data.size === 0) {

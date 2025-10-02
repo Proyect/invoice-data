@@ -19,7 +19,31 @@ import {
   Info,
   Refresh
 } from '@mui/icons-material';
-import { diagnoseDownloadSupport, testDownloadCapability } from '../utils/downloadDiagnostics';
+// Funciones de diagnóstico simplificadas
+const diagnoseDownloadSupport = () => ({
+  browserSupport: true,
+  blobSupport: typeof Blob !== 'undefined',
+  downloadSupport: typeof document.createElement('a').download !== 'undefined',
+  issues: [] as string[],
+  recommendations: [] as string[]
+});
+
+const testDownloadCapability = async (): Promise<boolean> => {
+  try {
+    const blob = new Blob(['test'], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'test.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const DownloadDiagnostics: React.FC = () => {
   const [diagnostics, setDiagnostics] = useState(diagnoseDownloadSupport());

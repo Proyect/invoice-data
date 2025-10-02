@@ -30,7 +30,7 @@ import {
   Schedule
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDocuments } from '../contexts/DocumentContext';
+import { useDocuments } from '../contexts/OptimizedDocumentContext';
 import { getDocumentTypeLabel, getStatusColor, formatDate } from '../utils/documentUtils';
 import toast from 'react-hot-toast';
 

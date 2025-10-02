@@ -9,34 +9,33 @@ import {
   Alert,
   CircularProgress
 } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/SimpleAuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/StableAuthContext';
 import { LoginCredentials } from '../types/auth';
 import toast from 'react-hot-toast';
-import SimpleDebug from '../components/SimpleDebug';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
-    const credentials: LoginCredentials = { username, password };
-    
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const credentials: LoginCredentials = { 
+      username: formData.get('username') as string, 
+      password: formData.get('password') as string 
+    };
+
     try {
       await login(credentials);
       toast.success('Inicio de sesión exitoso');
-      navigate(from, { replace: true });
+      navigate('/', { replace: true });
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || 'Error al iniciar sesión';
       setError(errorMessage);
@@ -48,7 +47,6 @@ const Login: React.FC = () => {
 
   return (
     <Container component="main" maxWidth="sm">
-      <SimpleDebug componentName="Login" />
       <Box
         sx={{
           marginTop: 8,
@@ -83,8 +81,6 @@ const Login: React.FC = () => {
               name="username"
               autoComplete="username"
               autoFocus
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
             />
             <TextField
@@ -96,8 +92,6 @@ const Login: React.FC = () => {
               type="password"
               id="password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
             />
             <Button
@@ -125,4 +119,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

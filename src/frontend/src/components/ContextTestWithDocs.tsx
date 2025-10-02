@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDocuments } from '../contexts/DocumentContext';
+import { useDocuments } from '../contexts/OptimizedDocumentContext';
 
 const ContextTestWithDocs: React.FC = () => {
   // Los hooks deben llamarse siempre al inicio del componente
