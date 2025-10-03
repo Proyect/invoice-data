@@ -75,6 +75,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
+      - SECRET_KEY_JWT=your_super_secret_jwt_key_here_make_it_long_and_random
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
       - LOCAL_STORAGE_PATH=/app/uploaded_documents_local
       - YOLO_MODELS_PATH=/app/models/yolo_models
     volumes:
