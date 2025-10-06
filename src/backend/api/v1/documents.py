@@ -15,6 +15,7 @@ from services.document_service import create_document_entry, get_document_by_id,
 from services.storage.local_storage import upload_file_local, download_file_local, LOCAL_STORAGE_PATH
 from services.task_queue_service import add_ocr_task
 from services.sync_ocr_service import process_document_sync, is_redis_available
+from services.fast_ocr_service import process_document_fast_sync
 from database import get_db
 
 logger = logging.getLogger(__name__)
@@ -85,7 +86,7 @@ async def upload_document(
             user_id=current_user.id # Asumiendo que User tiene un campo ID
         )
 
-        # 3. Procesar documento - usar Redis si está disponible, sino procesamiento síncrono
+        # 3. Procesar documento - usar Redis si está disponible, sino procesamiento rápido síncrono
         if is_redis_available():
             # Usar cola de tareas con Redis
             await add_ocr_task(str(document_id))
@@ -96,16 +97,25 @@ async def upload_document(
                 message="Document uploaded and queued for processing."
             )
         else:
-            # Procesamiento síncrono para desarrollo local
-            logger.info(f"Redis no disponible, procesando documento {document_id} de forma síncrona")
-            result = process_document_sync(document_id)
+            # Procesamiento rápido síncrono (optimizado para 30s máximo)
+            logger.info(f"Redis no disponible, procesando documento {document_id} con procesador rápido")
+            result = process_document_fast_sync(str(document_id))
             
             if result["status"] == "success":
                 return DocumentUploadResponse(
                     document_id=document_id,
                     filename=file.filename,
                     status="COMPLETED",
-                    message="Document uploaded and processed successfully."
+                    message=f"Document processed successfully in {result.get('processing_time', 0):.2f}s"
+                )
+            elif result["status"] == "timeout":
+                # Si excede 30s, marcar como pendiente para procesamiento posterior
+                logger.warning(f"Documento {document_id} excedió timeout, marcando como pendiente")
+                return DocumentUploadResponse(
+                    document_id=document_id,
+                    filename=file.filename,
+                    status="PENDING",
+                    message="Document processing exceeded time limit, will be processed later."
                 )
             else:
                 raise HTTPException(

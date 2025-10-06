@@ -10,7 +10,7 @@ project_root = os.getenv("PROJECT_ROOT")
 if project_root and project_root not in sys.path:
     sys.path.append(project_root)
 
-from src.backend.services.preprocessing_service import (
+from services.preprocessing_service import (
     preprocess_image_for_ocr, 
     deskew_image, 
     correct_perspective

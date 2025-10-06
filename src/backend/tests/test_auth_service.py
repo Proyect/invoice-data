@@ -11,7 +11,7 @@ if project_root and project_root not in sys.path:
 import uuid
 
 from datetime import timedelta
-from src.backend.services.auth_service import (
+from services.auth_service import (
     verify_password,
     get_password_hash,
     authenticate_user,

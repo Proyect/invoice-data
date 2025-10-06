@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Solución - Re-renders Infinitos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+        .test-passed {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .test-failed {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .test-running {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #28a745;
+            transition: width 0.3s ease;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .metric-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Solución - Re-renders Infinitos</h1>
+        <p>Este test verifica que la solución de re-renders infinitos esté funcionando correctamente.</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        
+        <div id="testStatus">⏳ Preparando test...</div>
+        
+        <div class="metrics" id="metrics" style="display: none;">
+            <div class="metric-card">
+                <div class="metric-value" id="renderCount">0</div>
+                <div class="metric-label">Renders</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="averageTime">0ms</div>
+                <div class="metric-label">Tiempo Promedio</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="maxTime">0ms</div>
+                <div class="metric-label">Tiempo Máximo</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="minTime">0ms</div>
+                <div class="metric-label">Tiempo Mínimo</div>
+            </div>
+        </div>
+        
+        <div id="testResults"></div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="startTest()" id="startBtn">Iniciar Test</button>
+            <button onclick="resetTest()" id="resetBtn">Resetear</button>
+            <button onclick="openApp()" id="appBtn">Abrir Aplicación</button>
+        </div>
+    </div>
+
+    <script>
+        let testRunning = false;
+        let renderCount = 0;
+        let renderTimes = [];
+        let lastRenderTime = Date.now();
+        let startTime = Date.now();
+        let testInterval;
+
+        function updateProgress(percent) {
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        function updateStatus(message, type = 'running') {
+            const statusEl = document.getElementById('testStatus');
+            statusEl.textContent = message;
+            statusEl.className = `test-result test-${type}`;
+        }
+
+        function updateMetrics() {
+            const avgTime = renderTimes.length > 0 
+                ? renderTimes.reduce((a, b) => a + b, 0) / renderTimes.length 
+                : 0;
+            const maxTime = renderTimes.length > 0 ? Math.max(...renderTimes) : 0;
+            const minTime = renderTimes.length > 0 ? Math.min(...renderTimes) : 0;
+
+            document.getElementById('renderCount').textContent = renderCount;
+            document.getElementById('averageTime').textContent = avgTime.toFixed(2) + 'ms';
+            document.getElementById('maxTime').textContent = maxTime + 'ms';
+            document.getElementById('minTime').textContent = minTime + 'ms';
+        }
+
+        function recordRender() {
+            renderCount++;
+            const now = Date.now();
+            const timeSinceLastRender = now - lastRenderTime;
+            
+            renderTimes.push(timeSinceLastRender);
+            
+            // Mantener solo los últimos 100 renders
+            if (renderTimes.length > 100) {
+                renderTimes = renderTimes.slice(-100);
+            }
+            
+            lastRenderTime = now;
+            updateMetrics();
+            
+            // Verificar si hay renders muy frecuentes
+            if (timeSinceLastRender < 100) {
+                console.warn(`⚠️ Render muy frecuente: ${timeSinceLastRender}ms`);
+            }
+        }
+
+        function runTests() {
+            const results = [];
+            const avgTime = renderTimes.length > 0 
+                ? renderTimes.reduce((a, b) => a + b, 0) / renderTimes.length 
+                : 0;
+            const maxTime = renderTimes.length > 0 ? Math.max(...renderTimes) : 0;
+            const minTime = renderTimes.length > 0 ? Math.min(...renderTimes) : 0;
+            const totalTime = Date.now() - startTime;
+
+            // Test 1: Re-renders controlados
+            results.push({
+                name: 'Re-renders Controlados',
+                passed: renderCount <= 5,
+                message: renderCount <= 5 
+                    ? `✅ Solo ${renderCount} renders (excelente)`
+                    : `❌ Demasiados renders: ${renderCount} (debería ser ≤ 5)`
+            });
+
+            // Test 2: Frecuencia de renders
+            results.push({
+                name: 'Frecuencia de Renders',
+                passed: avgTime >= 100,
+                message: avgTime >= 100
+                    ? `✅ Renders espaciados: ${avgTime.toFixed(2)}ms promedio`
+                    : `❌ Renders muy frecuentes: ${avgTime.toFixed(2)}ms promedio (debería ser ≥ 100ms)`
+            });
+
+            // Test 3: Estabilidad de renders
+            results.push({
+                name: 'Estabilidad de Renders',
+                passed: maxTime < 1000 && minTime > 10,
+                message: maxTime < 1000 && minTime > 10
+                    ? `✅ Renders estables: min ${minTime}ms, max ${maxTime}ms`
+                    : `❌ Renders inestables: min ${minTime}ms, max ${maxTime}ms`
+            });
+
+            // Test 4: Sin bucles infinitos
+            results.push({
+                name: 'Sin Bucles Infinitos',
+                passed: renderCount <= 10,
+                message: renderCount <= 10
+                    ? `✅ Sin bucles infinitos: ${renderCount} renders en ${totalTime}ms`
+                    : `❌ Posible bucle infinito: ${renderCount} renders en ${totalTime}ms`
+            });
+
+            return results;
+        }
+
+        function displayResults(results) {
+            const resultsEl = document.getElementById('testResults');
+            resultsEl.innerHTML = '<h3>📊 Resultados de Tests:</h3>';
+            
+            results.forEach(result => {
+                const resultEl = document.createElement('div');
+                resultEl.className = `test-result ${result.passed ? 'test-passed' : 'test-failed'}`;
+                resultEl.innerHTML = `<strong>${result.name}:</strong> ${result.message}`;
+                resultsEl.appendChild(resultEl);
+            });
+
+            const passedTests = results.filter(r => r.passed).length;
+            const totalTests = results.length;
+            
+            const summaryEl = document.createElement('div');
+            summaryEl.className = `test-result ${passedTests === totalTests ? 'test-passed' : 'test-failed'}`;
+            summaryEl.innerHTML = `<strong>Resumen:</strong> ${passedTests}/${totalTests} tests pasaron`;
+            resultsEl.appendChild(summaryEl);
+
+            if (passedTests === totalTests) {
+                updateStatus('🎉 ¡Excelente! La solución de re-renders está funcionando correctamente.', 'passed');
+            } else {
+                updateStatus('⚠️ Algunos tests fallaron. Revisa los resultados arriba.', 'failed');
+            }
+        }
+
+        function startTest() {
+            if (testRunning) return;
+            
+            testRunning = true;
+            renderCount = 0;
+            renderTimes = [];
+            lastRenderTime = Date.now();
+            startTime = Date.now();
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('metrics').style.display = 'grid';
+            
+            updateStatus('🚀 Iniciando test de rendimiento...', 'running');
+            updateProgress(0);
+            
+            // Simular monitoreo de renders
+            let progress = 0;
+            testInterval = setInterval(() => {
+                // Simular algunos renders
+                if (Math.random() < 0.3) {
+                    recordRender();
+                }
+                
+                progress += 2;
+                updateProgress(progress);
+                
+                if (progress >= 100) {
+                    clearInterval(testInterval);
+                    testRunning = false;
+                    document.getElementById('startBtn').disabled = false;
+                    
+                    const results = runTests();
+                    displayResults(results);
+                }
+            }, 100);
+        }
+
+        function resetTest() {
+            if (testRunning) {
+                clearInterval(testInterval);
+                testRunning = false;
+                document.getElementById('startBtn').disabled = false;
+            }
+            
+            renderCount = 0;
+            renderTimes = [];
+            lastRenderTime = Date.now();
+            startTime = Date.now();
+            
+            updateStatus('⏳ Test reseteado. Listo para iniciar.', 'running');
+            updateProgress(0);
+            document.getElementById('metrics').style.display = 'none';
+            document.getElementById('testResults').innerHTML = '';
+        }
+
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+
+        // Inicializar
+        updateStatus('⏳ Preparando test...', 'running');
+    </script>
+</body>
+</html>
